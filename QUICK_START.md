@@ -90,8 +90,9 @@ Replace `~/Downloads/office_installer.exe` with your actual installer path.
 **A:** Usually 90-95% as fast. Professional applications like Premiere Pro run at near-native speeds with GPU acceleration.
 
 ### Q: Do I need a powerful computer?
-**A:** For light apps like Office: 4GB RAM is enough.
-For professional apps like Premiere: 16GB RAM recommended.
+**A:** For light apps like Office/Photoshop: 4GB RAM is enough.
+For professional apps like Premiere/Revit: 8-16GB RAM recommended.
+Minimum CPU: Intel Core i3 (3rd Gen+) or AMD Ryzen 3.
 
 ### Q: What if something goes wrong?
 **A:** Run:
