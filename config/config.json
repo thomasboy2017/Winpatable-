@@ -1,0 +1,296 @@
+{
+  "name": "winpatable",
+  "version": "1.0.0",
+  "description": "Windows Compatibility Layer for Linux Mint and Ubuntu",
+  "author": "Winpatable Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thomasboy2017/Winpatable-"
+  },
+  "settings": {
+    "wine_prefix": "~/.winpatable",
+    "enable_dxvk": true,
+    "enable_vkd3d": true,
+    "enable_esync": true,
+    "enable_fsync": true,
+    "proton_version": "9.18"
+  },
+  "supported_os": [
+    "Ubuntu 20.04+",
+    "Ubuntu 22.04+",
+    "Ubuntu 24.04+",
+    "Linux Mint 20+",
+    "Linux Mint 21+"
+  ],
+  "supported_cpu": [
+    "Intel x86_64",
+    "AMD x86_64"
+  ],
+  "supported_gpu": [
+    "NVIDIA GeForce GTX 900+",
+    "NVIDIA GeForce RTX",
+    "AMD Radeon RX",
+    "Intel UHD Graphics",
+    "Intel Arc"
+  ],
+  "applications": {
+    "adobe_premiere": {
+      "name": "Adobe Premiere Pro",
+      "minimum_version": "2024",
+      "minimum_ram_gb": 16,
+      "gpu_required": true,
+      "dlls": [
+        "dotnet48",
+        "d3dx9",
+        "d3dx10",
+        "d3dx11",
+        "corefonts"
+      ],
+      "notes": "NVIDIA GPU recommended for CUDA acceleration"
+    },
+    "sony_vegas": {
+      "name": "Sony Vegas Pro",
+      "minimum_version": "19.0",
+      "minimum_ram_gb": 8,
+      "gpu_required": false,
+      "dlls": [
+        "dotnet48",
+        "d3dx9",
+        "d3dx11",
+        "corefonts",
+        "vcrun2019"
+      ],
+      "notes": "Works with integrated graphics, better with dedicated GPU"
+    },
+    "autodesk_3dsmax": {
+      "name": "Autodesk 3DS Max",
+      "minimum_version": "2024",
+      "minimum_ram_gb": 16,
+      "gpu_required": true,
+      "dlls": [
+        "dotnet48",
+        "d3dx9",
+        "d3dx10",
+        "d3dx11",
+        "d3dx12",
+        "vcrun2019",
+        "corefonts"
+      ],
+      "notes": "Dedicated GPU essential for viewport performance"
+    },
+    "microsoft_office": {
+      "name": "Microsoft Office",
+      "minimum_version": "2016",
+      "minimum_ram_gb": 4,
+      "gpu_required": false,
+      "dlls": [
+        "dotnet48",
+        "corefonts",
+        "vcrun2019",
+        "vb6run"
+      ],
+      "notes": "Works well on all system configurations"
+    },
+    "adobe_audition": {
+      "name": "Adobe Audition",
+      "minimum_version": "2024",
+      "minimum_ram_gb": 8,
+      "gpu_required": false,
+      "dlls": [
+        "dotnet48",
+        "d3dx9",
+        "d3dx11",
+        "corefonts",
+        "vcrun2019"
+      ],
+      "notes": "Audio editing suite with excellent Wine support"
+    },
+    "steinberg_cubase": {
+      "name": "Steinberg Cubase",
+      "minimum_version": "12.0",
+      "minimum_ram_gb": 16,
+      "gpu_required": false,
+      "dlls": [
+        "dotnet48",
+        "d3dx9",
+        "d3dx11",
+        "corefonts",
+        "vcrun2019"
+      ],
+      "notes": "Professional DAW with VST3 plugin support"
+    },
+    "ableton_live": {
+      "name": "Ableton Live",
+      "minimum_version": "12.0",
+      "minimum_ram_gb": 8,
+      "gpu_required": false,
+      "dlls": [
+        "dotnet48",
+        "d3dx9",
+        "d3dx11",
+        "corefonts",
+        "vcrun2019"
+      ],
+      "notes": "Music production DAW with excellent latency handling"
+    },
+    "autodesk_autocad": {
+      "name": "Autodesk AutoCAD",
+      "minimum_version": "2024",
+      "minimum_ram_gb": 16,
+      "gpu_required": true,
+      "dlls": [
+        "dotnet48",
+        "d3dx9",
+        "d3dx10",
+        "d3dx11",
+        "d3dx12",
+        "vcrun2019",
+        "corefonts"
+      ],
+      "notes": "2D/3D CAD with DirectX 11 rendering"
+    },
+    "solidworks": {
+      "name": "SolidWorks",
+      "minimum_version": "2024",
+      "minimum_ram_gb": 16,
+      "gpu_required": true,
+      "dlls": [
+        "dotnet48",
+        "d3dx9",
+        "d3dx10",
+        "d3dx11",
+        "d3dx12",
+        "vcrun2019",
+        "corefonts"
+      ],
+      "notes": "3D CAD/CAM with GPU acceleration required"
+    },
+    "autodesk_fusion360": {
+      "name": "Autodesk Fusion 360",
+      "minimum_version": "1.0",
+      "minimum_ram_gb": 8,
+      "gpu_required": true,
+      "dlls": [
+        "dotnet48",
+        "d3dx9",
+        "d3dx10",
+        "d3dx11",
+        "d3dx12",
+        "vcrun2019",
+        "corefonts"
+      ],
+      "notes": "Cloud-based CAD/CAM platform"
+    },
+    "microsoft_visualstudio": {
+      "name": "Microsoft Visual Studio",
+      "minimum_version": "2022",
+      "minimum_ram_gb": 8,
+      "gpu_required": false,
+      "dlls": [
+        "dotnet48",
+        "dotnet462",
+        "vcrun2019",
+        "corefonts"
+      ],
+      "notes": "IDE for C#, C++, Python development"
+    },
+    "jetbrains_ide": {
+      "name": "JetBrains IDE",
+      "minimum_version": "2023.3",
+      "minimum_ram_gb": 4,
+      "gpu_required": false,
+      "dlls": [
+        "dotnet48",
+        "vcrun2019",
+        "corefonts"
+      ],
+      "notes": "PyCharm, IntelliJ IDEA, WebStorm, Rider, etc."
+    },
+    "unity_engine": {
+      "name": "Unity Engine",
+      "minimum_version": "2023.2",
+      "minimum_ram_gb": 8,
+      "gpu_required": true,
+      "dlls": [
+        "dotnet48",
+        "d3dx9",
+        "d3dx10",
+        "d3dx11",
+        "d3dx12",
+        "vcrun2019",
+        "corefonts"
+      ],
+      "notes": "Game engine with Vulkan and DirectX support"
+    },
+    "unreal_engine": {
+      "name": "Unreal Engine",
+      "minimum_version": "5.3",
+      "minimum_ram_gb": 16,
+      "gpu_required": true,
+      "dlls": [
+        "dotnet48",
+        "d3dx9",
+        "d3dx10",
+        "d3dx11",
+        "d3dx12",
+        "vcrun2019",
+        "corefonts"
+      ],
+      "notes": "Professional game engine with real-time rendering"
+    }
+  },
+  "graphics_apis": {
+    "vulkan": {
+      "enabled": true,
+      "version": "1.3+"
+    },
+    "opengl": {
+      "enabled": true,
+      "version": "4.6+"
+    },
+    "directx": {
+      "d3d9": true,
+      "d3d10": true,
+      "d3d11": true,
+      "d3d12": true
+    }
+  },
+  "wine_dependencies": [
+    "wine",
+    "wine32",
+    "wine64",
+    "winetricks",
+    "wineserver"
+  ],
+  "gpu_packages": {
+    "nvidia": [
+      "nvidia-driver-550",
+      "nvidia-dkms-550",
+      "libnvidia-gl-550",
+      "cuda-toolkit-12-3"
+    ],
+    "amd": [
+      "amdgpu-install",
+      "rocm-hip-sdk",
+      "rocm-opencl-sdk"
+    ],
+    "intel": [
+      "intel-gpu-tools",
+      "libva-intel-driver",
+      "intel-arc-gpu-plugin"
+    ]
+  },
+  "vulkan_packages": [
+    "vulkan-tools",
+    "vulkan-loader",
+    "libvulkan1",
+    "vulkan-validation-layers"
+  ],
+  "opengl_packages": [
+    "libgl1-mesa-dri",
+    "libgl1-mesa-glx",
+    "libglu1-mesa",
+    "mesa-utils"
+  ]
+}

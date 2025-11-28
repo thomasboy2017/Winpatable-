@@ -1,0 +1,55 @@
+name: Build Flatpak
+
+on:
+  push:
+    branches: [ '**' ]
+  pull_request:
+    branches: [ '**' ]
+  workflow_dispatch: {}
+
+jobs:
+  build-flatpak:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup cache for Flatpak SDK and downloads
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/flatpak
+            ~/.local/share/flatpak
+            ~/.var/lib/flatpak
+          key: ${{ runner.os }}-flatpak-${{ hashFiles('org.winpatable.Winpatable.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-flatpak-
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends flatpak flatpak-builder curl
+
+      - name: Add Flathub remote
+        run: |
+          flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo || true
+
+      - name: Install freedesktop SDK and Platform
+        run: |
+          # Use --user so we don't need root-owned flatpak directories
+          flatpak --user install -y flathub org.freedesktop.Sdk//23.08 org.freedesktop.Platform//23.08 || true
+
+      - name: Build Flatpak with flatpak-builder
+        run: |
+          mkdir -p build
+          flatpak-builder --force-clean --repo=repo build-dir org.winpatable.Winpatable.yml
+
+      - name: Create Flatpak bundle
+        run: |
+          flatpak build-bundle repo winpatable.flatpak org.winpatable.Winpatable
+
+      - name: Upload bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: winpatable-flatpak
+          path: winpatable.flatpak
