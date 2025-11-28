@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
 Distribution utilities for consistent distro and package manager detection.
-Supports Ubuntu, Linux Mint, and other Debian-based systems.
+Supports Ubuntu, Linux Mint, Debian, Fedora, and other Linux distributions.
 """
 
 import os
 import subprocess
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List
 
 class DistroUtils:
     """Utilities for distro and package manager detection"""
@@ -42,6 +42,17 @@ class DistroUtils:
                any(indicator in id_like for indicator in debian_indicators)
     
     @staticmethod
+    def is_fedora_based() -> bool:
+        """Check if system is Fedora-based (Fedora, RHEL, CentOS, etc.)"""
+        data = DistroUtils.get_os_release()
+        os_id = data.get('ID', '').lower()
+        id_like = data.get('ID_LIKE', '').lower()
+        
+        fedora_indicators = ['fedora', 'rhel', 'centos', 'rocky', 'alma']
+        return any(indicator in os_id for indicator in fedora_indicators) or \
+               any(indicator in id_like for indicator in fedora_indicators)
+    
+    @staticmethod
     def get_distro_name() -> str:
         """Get normalized distro name (ubuntu, linuxmint, debian, etc.)"""
         data = DistroUtils.get_os_release()
@@ -57,20 +68,33 @@ class DistroUtils:
         """
         Detect and return package manager command.
         Returns: (manager_name, manager_executable)
-        Examples: ('apt', 'apt'), ('apt-get', 'apt-get')
+        Supports: apt/apt-get (Debian), dnf (Fedora)
         """
-        managers = {
-            'apt': '/usr/bin/apt',
-            'apt-get': '/usr/bin/apt-get',
-        }
+        data = DistroUtils.get_os_release()
+        os_id = data.get('ID', '').lower()
         
-        # Prefer apt over apt-get on Debian-based systems
-        for name, path in managers.items():
-            if os.path.exists(path) and os.access(path, os.X_OK):
-                return name, name
+        # Check for Fedora-based systems
+        if DistroUtils.is_fedora_based():
+            fedora_managers = {
+                'dnf': '/usr/bin/dnf',
+                'yum': '/usr/bin/yum',
+            }
+            for name, path in fedora_managers.items():
+                if os.path.exists(path) and os.access(path, os.X_OK):
+                    return name, name
+        
+        # Check for Debian-based systems
+        if DistroUtils.is_debian_based() or True:  # Default to apt
+            debian_managers = {
+                'apt': '/usr/bin/apt',
+                'apt-get': '/usr/bin/apt-get',
+            }
+            for name, path in debian_managers.items():
+                if os.path.exists(path) and os.access(path, os.X_OK):
+                    return name, name
         
         # Last resort: try to find via which command
-        for name in ['apt', 'apt-get']:
+        for name in ['dnf', 'yum', 'apt', 'apt-get']:
             try:
                 result = subprocess.run(['which', name], capture_output=True, text=True, check=False)
                 if result.returncode == 0:

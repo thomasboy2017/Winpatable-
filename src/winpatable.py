@@ -21,6 +21,7 @@ from src.installers.app_installers import ApplicationManager
 from src.core.updater import auto_update, UpdateChecker
 from src.core.ai_assistant import WinpatableAI, ai_analyze_app
 from src.core.performance import ConfigurationProfile, PerformanceBenchmark, PerformanceCache
+from src.core.security import SecurityAuditor, MalwareDetector, CodeSigner
 
 # ANSI Colors
 class Colors:
@@ -419,8 +420,76 @@ class WinpatableUI:
                 print_error(f"Profile '{profile_name}' not found")
             
             print_color("="*70 + "\n", Colors.BOLD)
-        """Main entry point"""
-        parser = argparse.ArgumentParser(
+    
+    def cmd_security(self, args):
+        """Security audit and malware scanning command"""
+        
+        if not hasattr(args, 'security_command') or not args.security_command:
+            print_color("\n" + "="*70)
+            print_color("WINPATABLE SECURITY", Colors.BOLD)
+            print_color("="*70 + "\n")
+            
+            print("Available commands:\n")
+            print("  security audit         - Run comprehensive security audit")
+            print("  security scan <path>   - Scan directory for malware")
+            print("  security install-clamav - Install ClamAV antivirus\n")
+            print_color("="*70 + "\n", Colors.BOLD)
+            return
+        
+        if args.security_command == 'audit':
+            print_color("\n" + "="*70)
+            print_color("SECURITY AUDIT", Colors.BOLD)
+            print_color("="*70 + "\n")
+            print("Running comprehensive security checks...\n")
+            
+            auditor = SecurityAuditor()
+            checks = auditor.run_all_checks()
+            auditor.print_report()
+        
+        elif args.security_command == 'scan':
+            path = args.path
+            print_color("\n" + "="*70)
+            print_color(f"MALWARE SCAN: {path}", Colors.BOLD)
+            print_color("="*70 + "\n")
+            
+            detector = MalwareDetector()
+            
+            if not detector.clamav_available:
+                print_warning("ClamAV not installed. Install with:")
+                print("  winpatable security install-clamav\n")
+                return
+            
+            print(f"Scanning {path}...\n")
+            results = detector.scan_directory(path)
+            
+            if results:
+                print_error(f"Found {len(results)} potential threats:\n")
+                for filepath, (clean, msg) in results.items():
+                    print(f"  ✗ {filepath}")
+                    print(f"    {msg}\n")
+            else:
+                print_success("No threats detected!")
+            
+            print_color("="*70 + "\n", Colors.BOLD)
+        
+        elif args.security_command == 'install-clamav':
+            print_color("\n" + "="*70)
+            print_color("INSTALLING CLAMAV", Colors.BOLD)
+            print_color("="*70 + "\n")
+            
+            detector = MalwareDetector()
+            print("Installing ClamAV antivirus...")
+            
+            if detector.install_clamav():
+                print_success("ClamAV installed successfully!")
+                print("\nUpdate virus definitions with:")
+                print("  sudo freshclam\n")
+            else:
+                print_error("Failed to install ClamAV")
+            
+            print_color("="*70 + "\n", Colors.BOLD)
+    
+    def run(self):
             description='Winpatable - Windows Compatibility Layer for Linux',
             formatter_class=argparse.RawDescriptionHelpFormatter,
             epilog="""
@@ -502,6 +571,15 @@ Examples:
         profile_apply.add_argument('name', choices=['gaming', 'creative', 'business', 'development', 'audio'],
                                  help='Profile name to apply')
         
+        # Security command
+        security_parser = subparsers.add_parser('security', help='Security audit and malware scanning')
+        security_subparsers = security_parser.add_subparsers(dest='security_command', help='Security commands')
+        security_subparsers.add_parser('audit', help='Run comprehensive security audit')
+        security_scan = security_subparsers.add_parser('scan', help='Scan for malware')
+        security_scan.add_argument('path', nargs='?', default=str(Path.home() / '.winpatable'),
+                                 help='Path to scan (default: ~/.winpatable)')
+        security_subparsers.add_parser('install-clamav', help='Install ClamAV antivirus')
+        
         args = parser.parse_args()
         
         self.print_banner()
@@ -521,7 +599,8 @@ Examples:
             'performance-tuning': self.cmd_performance_tuning,
             'update': self.cmd_update,
             'ai': self.cmd_ai,
-            'profile': self.cmd_profile
+            'profile': self.cmd_profile,
+            'security': self.cmd_security
         }
         
         if args.command in command_map:
