@@ -8,6 +8,9 @@ import argparse
 import sys
 import os
 import webbrowser
+import shutil
+import subprocess
+import urllib.request
 from pathlib import Path
 from typing import Optional
 import time
@@ -709,6 +712,10 @@ Examples:
         updater_sub.add_parser('enable-timer', help='Register systemd user timer to run winpatable update daily')
         updater_sub.add_parser('disable-timer', help='Disable the systemd user timer')
         updater_sub.add_parser('status', help='Show updater timer status (systemctl --user)')
+        updater_sub.add_parser('enable-cron', help='Register a daily cron job as a fallback to run the updater')
+        updater_sub.add_parser('disable-cron', help='Remove the cron job fallback')
+        fetch_manifest = updater_sub.add_parser('fetch-manifest', help='Validate and set a release manifest URL for channel mapping')
+        fetch_manifest.add_argument('--url', required=True, help='URL to JSON manifest mapping tags to channel objects')
         
         args = parser.parse_args()
         
@@ -805,6 +812,83 @@ Examples:
 
         # Offer to open GitHub new issue page with prefilled title/body
         if sys.stdin.isatty():
+        elif cmd == 'enable-cron':
+            # Add a daily cron job as a fallback for systems without systemd user timers
+            if shutil.which('crontab') is None:
+                print_error('crontab command not available on this system')
+                return
+
+            cron_cmd = f"@daily {sys.executable} -m src.core.updater --check-only # winpatable-updater"
+            try:
+                proc = subprocess.run(['crontab', '-l'], capture_output=True, text=True)
+                existing = proc.stdout if proc.returncode == 0 else ''
+            except Exception as e:
+                print_warning(f'Could not read existing crontab: {e}')
+                existing = ''
+
+            if 'winpatable-updater' in existing:
+                print_info('Cron job already installed')
+                return
+
+            new_cron = existing.rstrip() + '\n' + cron_cmd + '\n'
+            try:
+                subprocess.run(['crontab', '-'], input=new_cron, text=True, check=True)
+                print_success('Installed daily cron job for winpatable updater')
+            except Exception as e:
+                print_error(f'Failed to install cron job: {e}')
+
+        elif cmd == 'disable-cron':
+            # Remove any winpatable-updater lines from crontab
+            if shutil.which('crontab') is None:
+                print_error('crontab command not available on this system')
+                return
+
+            try:
+                proc = subprocess.run(['crontab', '-l'], capture_output=True, text=True)
+                if proc.returncode != 0:
+                    print_info('No crontab installed for current user')
+                    return
+                lines = proc.stdout.splitlines()
+                filtered = [ln for ln in lines if 'winpatable-updater' not in ln]
+                new_cron = '\n'.join(filtered) + '\n' if filtered else ''
+                subprocess.run(['crontab', '-'], input=new_cron, text=True, check=True)
+                print_success('Removed winpatable updater cron job')
+            except Exception as e:
+                print_error(f'Failed to modify crontab: {e}')
+
+        elif cmd == 'fetch-manifest':
+            # Validate manifest URL and save to updater config
+            url = getattr(args, 'url', None)
+            if not url:
+                print_error('Please provide --url for fetch-manifest')
+                return
+
+            try:
+                with urllib.request.urlopen(url, timeout=8) as resp:
+                    data = json.loads(resp.read().decode('utf-8'))
+
+                if not isinstance(data, dict):
+                    print_error('Manifest must be a JSON object mapping tags to channel objects')
+                    return
+
+                # Simple validation: each value should be an object with a 'channel' key
+                for tag, obj in data.items():
+                    if not isinstance(obj, dict) or 'channel' not in obj:
+                        print_error(f"Manifest entry for '{tag}' is invalid; missing 'channel' key")
+                        return
+
+                # Save to updater config
+                try:
+                    from src.core.updater import UpdateChecker
+                    cfg = UpdateChecker.load_updater_config()
+                    cfg['release_manifest_url'] = url
+                    UpdateChecker.save_updater_config(cfg)
+                    print_success('Release manifest URL validated and saved to updater configuration')
+                except Exception as e:
+                    print_error(f'Failed to save manifest URL to config: {e}')
+            except Exception as e:
+                print_error(f'Failed to fetch or validate manifest: {e}')
+
             go = input("Open GitHub new issue page to submit this report? (y/n): ").strip().lower()
             if go == 'y':
                 repo = 'thomasboy2017/Winpatable-'
