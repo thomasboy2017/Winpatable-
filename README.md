@@ -245,6 +245,41 @@ winpatable updater status
 
 If systemd user services aren't available (containers/minimal systems), the command will print guidance on alternatives (cron).
 
+### Updater: Cron Fallback & Release Manifest
+
+If your system doesn't support systemd user timers (or you prefer a simple fallback), Winpatable can register a daily cron job as an alternative. This uses the current Python executable and calls the built-in updater in check-only mode.
+
+```bash
+# Install a daily cron fallback (writes a crontab entry tagged with 'winpatable-updater')
+winpatable updater enable-cron
+
+# Remove the fallback cron entry
+winpatable updater disable-cron
+```
+
+- The cron job entry looks like: `@daily <python> -m src.core.updater --check-only # winpatable-updater`.
+- The crontab command must be available (`crontab -l` / `crontab -`). If it's not present, the CLI will print an error with next steps.
+
+For advanced channel control you can provide a remote JSON release manifest. A manifest maps release tags to channel metadata so the updater can decide whether a release is `stable` or `beta` regardless of tag heuristics.
+
+Example manifest (host as raw JSON on a webserver):
+
+```json
+{
+	"v1.5.0": { "channel": "stable" },
+	"v1.6.0-beta": { "channel": "beta" }
+}
+```
+
+To validate and save a manifest URL to the updater configuration use:
+
+```bash
+winpatable updater fetch-manifest --url https://example.com/winpatable-manifest.json
+```
+
+- On success the URL is saved to `~/.winpatable/updater.json` as `release_manifest_url` and will be consulted during update checks.
+- The manifest must be a JSON object where each key is a release tag and each value is an object containing at least the `channel` key.
+
 ### Release Manifest (optional)
 
 For more control over release channels you can provide a JSON manifest mapping tags to channels. Example manifest (host as raw JSON on a webserver or repo):
