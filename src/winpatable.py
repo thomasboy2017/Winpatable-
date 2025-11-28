@@ -20,6 +20,7 @@ from src.wine.wine_manager import WineManager
 from src.installers.app_installers import ApplicationManager
 from src.core.updater import auto_update, UpdateChecker
 from src.core.ai_assistant import WinpatableAI, ai_analyze_app
+from src.core.performance import ConfigurationProfile, PerformanceBenchmark, PerformanceCache
 
 # ANSI Colors
 class Colors:
@@ -367,7 +368,57 @@ class WinpatableUI:
             
             print_color("\n" + "="*70 + "\n", Colors.BOLD)
     
-    def run(self):
+    def cmd_profile(self, args):
+        """Configuration profile command handler"""
+        
+        if not hasattr(args, 'profile_command') or not args.profile_command:
+            print_color("\n" + "="*70)
+            print_color("WINPATABLE CONFIGURATION PROFILES", Colors.BOLD)
+            print_color("="*70 + "\n")
+            
+            profiles = ConfigurationProfile.list_profiles()
+            print("Available profiles:\n")
+            
+            for name, info in profiles.items():
+                print(f"  {name.upper()}")
+                print(f"    {info['description']}")
+                print(f"    Recommended apps: {info['apps']}\n")
+            
+            print("Usage: winpatable profile list")
+            print("       winpatable profile apply <profile_name>\n")
+            print_color("="*70 + "\n", Colors.BOLD)
+            return
+        
+        if args.profile_command == 'list':
+            print_color("\n" + "="*70)
+            print_color("WINPATABLE CONFIGURATION PROFILES", Colors.BOLD)
+            print_color("="*70 + "\n")
+            
+            profiles = ConfigurationProfile.list_profiles()
+            
+            for name, info in profiles.items():
+                print(f"📋 {name.upper()}")
+                print(f"   Description: {info['description']}")
+                print(f"   Recommended applications: {info['apps']}\n")
+            
+            print_color("="*70 + "\n", Colors.BOLD)
+        
+        elif args.profile_command == 'apply':
+            profile_name = args.name
+            print_color("\n" + "="*70)
+            print_color(f"APPLYING PROFILE: {profile_name.upper()}", Colors.BOLD)
+            print_color("="*70)
+            
+            success = ConfigurationProfile.apply_profile(profile_name)
+            
+            if success:
+                print_success(f"Profile '{profile_name}' configuration loaded")
+                print("\nYou can now install recommended applications using:")
+                print(f"  winpatable install-app <app_name>\n")
+            else:
+                print_error(f"Profile '{profile_name}' not found")
+            
+            print_color("="*70 + "\n", Colors.BOLD)
         """Main entry point"""
         parser = argparse.ArgumentParser(
             description='Winpatable - Windows Compatibility Layer for Linux',
@@ -443,6 +494,14 @@ Examples:
         ai_analyze.add_argument('app', help='Application name to analyze')
         ai_subparsers.add_parser('recommend', help='Get AI recommendations for your system')
         
+        # Profile command
+        profile_parser = subparsers.add_parser('profile', help='Configuration profiles for different use cases')
+        profile_subparsers = profile_parser.add_subparsers(dest='profile_command', help='Profile commands')
+        profile_subparsers.add_parser('list', help='List available configuration profiles')
+        profile_apply = profile_subparsers.add_parser('apply', help='Apply a configuration profile')
+        profile_apply.add_argument('name', choices=['gaming', 'creative', 'business', 'development', 'audio'],
+                                 help='Profile name to apply')
+        
         args = parser.parse_args()
         
         self.print_banner()
@@ -461,7 +520,8 @@ Examples:
             'quick-start': self.cmd_quick_start,
             'performance-tuning': self.cmd_performance_tuning,
             'update': self.cmd_update,
-            'ai': self.cmd_ai
+            'ai': self.cmd_ai,
+            'profile': self.cmd_profile
         }
         
         if args.command in command_map:

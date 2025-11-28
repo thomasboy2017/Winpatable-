@@ -2,12 +2,14 @@
 """
 GPU Driver Installation Module
 Handles GPU driver setup for NVIDIA, AMD, and Intel GPUs
+Includes VRAM detection and optimization
 """
 
 import subprocess
 import sys
 import os
-from typing import List, Tuple
+import re
+from typing import List, Tuple, Dict, Optional
 from src.core.system_info import SystemDetector, GPUType
 from src.core.distro_utils import DistroUtils
 
@@ -17,6 +19,111 @@ class GPUDriverManager:
     def __init__(self, use_sudo: bool = True):
         self.use_sudo = use_sudo
         self.package_manager, _ = DistroUtils.get_package_manager()
+        self.gpu_info = {}
+    
+    def detect_gpu_vram(self) -> Dict[str, int]:
+        """Detect VRAM for all GPUs"""
+        vram_info = {}
+        
+        # Check NVIDIA VRAM
+        try:
+            output = subprocess.check_output(['nvidia-smi', '--query-gpu=name,memory.total', '--format=csv,noheader'], 
+                                           text=True, timeout=5)
+            for line in output.strip().split('\n'):
+                if line:
+                    parts = line.split(',')
+                    if len(parts) >= 2:
+                        gpu_name = parts[0].strip()
+                        vram = int(parts[1].strip().split()[0])  # Extract MB value
+                        vram_info[gpu_name] = vram
+        except:
+            pass
+        
+        # Check AMD VRAM
+        try:
+            output = subprocess.check_output(['rocm-smi', '--showproductname', '--showmeminfo', 'HBM'],
+                                           text=True, timeout=5, stderr=subprocess.DEVNULL)
+            lines = output.strip().split('\n')
+            for line in lines:
+                if 'HBM' in line and 'MB' in line:
+                    match = re.search(r'(\d+)\s*MB', line)
+                    if match:
+                        vram = int(match.group(1))
+                        vram_info['AMD GPU'] = vram
+        except:
+            pass
+        
+        # Check Intel VRAM
+        try:
+            output = subprocess.check_output(['gpu-smi', '-i', '-s'], 
+                                           text=True, timeout=5, stderr=subprocess.DEVNULL)
+            # Parse Intel GPU info
+            if 'dedicated' in output.lower():
+                match = re.search(r'(\d+)\s*MB', output)
+                if match:
+                    vram = int(match.group(1))
+                    vram_info['Intel GPU'] = vram
+        except:
+            pass
+        
+        self.gpu_info = vram_info
+        return vram_info
+    
+    def get_gpu_capability_score(self) -> Dict[str, float]:
+        """Calculate GPU capability scores (0-100)"""
+        scores = {}
+        vram_info = self.detect_gpu_vram()
+        
+        for gpu_name, vram_mb in vram_info.items():
+            vram_gb = vram_mb / 1024
+            
+            # Scoring formula: more VRAM = higher score
+            if vram_gb >= 24:
+                score = 95  # High-end
+            elif vram_gb >= 12:
+                score = 85  # Mid-high
+            elif vram_gb >= 8:
+                score = 75  # Mid
+            elif vram_gb >= 4:
+                score = 60  # Entry-level
+            elif vram_gb >= 2:
+                score = 40  # Limited
+            else:
+                score = 20  # Minimal
+            
+            scores[f"{gpu_name} ({vram_gb:.1f}GB)"] = score
+        
+        return scores
+    
+    def get_gpu_recommendations(self) -> List[str]:
+        """Get GPU optimization recommendations"""
+        recommendations = []
+        vram_info = self.detect_gpu_vram()
+        
+        if not vram_info:
+            recommendations.append("No discrete GPU detected. Using integrated graphics.")
+            recommendations.append("Integrated graphics may limit performance for demanding apps.")
+            return recommendations
+        
+        total_vram = sum(vram_info.values()) / 1024  # Convert to GB
+        
+        if total_vram >= 24:
+            recommendations.append("✓ Excellent VRAM capacity for all applications")
+            recommendations.append("  Can run 4K video editing and intensive 3D rendering")
+        elif total_vram >= 12:
+            recommendations.append("✓ Good VRAM capacity for most professional applications")
+            recommendations.append("  Best performance with full-HD or 1440p projects")
+        elif total_vram >= 8:
+            recommendations.append("⚠ Moderate VRAM - suitable for most apps with optimization")
+            recommendations.append("  Reduce project complexity for intensive 3D/video work")
+        elif total_vram >= 4:
+            recommendations.append("⚠ Limited VRAM - may require optimization tweaks")
+            recommendations.append("  Use lower resolution previews and progressive rendering")
+        else:
+            recommendations.append("✗ Insufficient VRAM for demanding applications")
+            recommendations.append("  Consider upgrading GPU or using CPU rendering")
+        
+        return recommendations
     
     def run_command(self, cmd: List[str], check: bool = True) -> Tuple[int, str, str]:
         """Run command with optional sudo"""
