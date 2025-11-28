@@ -19,6 +19,7 @@ from src.gpu.gpu_manager import GPUDriverManager
 from src.wine.wine_manager import WineManager
 from src.installers.app_installers import ApplicationManager
 from src.core.updater import auto_update, UpdateChecker
+from src.core.ai_assistant import WinpatableAI, ai_analyze_app
 
 # ANSI Colors
 class Colors:
@@ -293,6 +294,79 @@ class WinpatableUI:
         
         print_color("="*60 + "\n", Colors.BOLD)
     
+    def cmd_ai(self, args):
+        """AI Assistant command handler"""
+        ai = WinpatableAI()
+        
+        if not hasattr(args, 'ai_command') or not args.ai_command:
+            print_color("\n" + "="*70)
+            print_color("WINPATABLE AI ASSISTANT", Colors.BOLD)
+            print_color("="*70 + "\n")
+            print("Available commands:")
+            print("  ai list       - List all apps with AI compatibility scores")
+            print("  ai analyze    - Analyze compatibility of a specific app")
+            print("  ai recommend  - Get recommendations for your system")
+            print_color("="*70 + "\n", Colors.BOLD)
+            return
+        
+        if args.ai_command == 'list':
+            print_color("\n" + "="*70)
+            print_color("WINPATABLE AI - APPLICATION COMPATIBILITY ANALYSIS", Colors.BOLD)
+            print_color("="*70 + "\n")
+            
+            recommendations = ai.get_all_recommendations()
+            sorted_apps = sorted(
+                recommendations.items(),
+                key=lambda x: x[1].compatibility_score,
+                reverse=True
+            )
+            
+            for app_key, rec in sorted_apps:
+                score = rec.compatibility_score * 100
+                score_color = "🟢" if score >= 90 else \
+                              "🟡" if score >= 80 else \
+                              "🟠" if score >= 60 else "🔴"
+                print(f"{score_color} {rec.app_name:25s} | {score:5.0f}% | {rec.estimated_performance:10s}")
+            
+            print("\n🟢 Excellent (90-100%) | 🟡 Good (80-89%) | 🟠 Moderate (60-79%) | 🔴 Limited (0-59%)")
+            print_color("="*70 + "\n", Colors.BOLD)
+        
+        elif args.ai_command == 'analyze':
+            app_name = args.app
+            print(ai.analyze_compatibility(app_name))
+        
+        elif args.ai_command == 'recommend':
+            print_color("\n" + "="*70)
+            print_color("WINPATABLE AI - PERSONALIZED RECOMMENDATIONS", Colors.BOLD)
+            print_color("="*70 + "\n")
+            
+            if self.system_info:
+                print_info(f"GPU: {self.system_info.get('gpu', {}).get('name', 'Unknown')}")
+                print_info(f"CPU: {self.system_info.get('cpu', {}).get('model', 'Unknown')}")
+                print_info(f"RAM: {self.system_info.get('memory_gb', 0)}GB")
+                print_info(f"OS: {self.system_info.get('os', 'Unknown')}")
+                
+                print("\nBased on your system, here are the recommended applications:")
+                print("(Applications with highest compatibility scores)\n")
+                
+                recommendations = ai.get_all_recommendations()
+                sorted_apps = sorted(
+                    recommendations.items(),
+                    key=lambda x: x[1].compatibility_score,
+                    reverse=True
+                )
+                
+                count = 0
+                for app_key, rec in sorted_apps:
+                    if count >= 15:
+                        break
+                    score = rec.compatibility_score * 100
+                    if score >= 70:
+                        print(f"✓ {rec.app_name:25s} ({score:.0f}%) - {rec.estimated_performance}")
+                        count += 1
+            
+            print_color("\n" + "="*70 + "\n", Colors.BOLD)
+    
     def run(self):
         """Main entry point"""
         parser = argparse.ArgumentParser(
@@ -361,6 +435,14 @@ Examples:
         update_parser.add_argument('--check-only', action='store_true', help='Only check for updates, do not install')
         update_parser.add_argument('--force', action='store_true', help='Force update without asking for confirmation')
         
+        # AI Assistant command
+        ai_parser = subparsers.add_parser('ai', help='AI assistant for app compatibility')
+        ai_subparsers = ai_parser.add_subparsers(dest='ai_command', help='AI commands')
+        ai_subparsers.add_parser('list', help='List all supported apps with AI scores')
+        ai_analyze = ai_subparsers.add_parser('analyze', help='Analyze compatibility of an app')
+        ai_analyze.add_argument('app', help='Application name to analyze')
+        ai_subparsers.add_parser('recommend', help='Get AI recommendations for your system')
+        
         args = parser.parse_args()
         
         self.print_banner()
@@ -378,7 +460,8 @@ Examples:
             'list-apps': self.cmd_list_apps,
             'quick-start': self.cmd_quick_start,
             'performance-tuning': self.cmd_performance_tuning,
-            'update': self.cmd_update
+            'update': self.cmd_update,
+            'ai': self.cmd_ai
         }
         
         if args.command in command_map:

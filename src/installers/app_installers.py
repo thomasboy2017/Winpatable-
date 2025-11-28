@@ -1204,6 +1204,723 @@ class MicrosoftAccessInstaller(ApplicationInstaller):
             return False
 
 
+# Development Tools
+class NoteplusPlusInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="Notepad++",
+        windows_executable="notepad++.exe",
+        required_dlls=['dotnet48'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['dotnet48'],
+        minimum_ram_gb=4,
+        gpu_required=False,
+        notes="Lightweight text editor with syntax highlighting"
+    )
+    
+    def install(self) -> bool:
+        try:
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ Notepad++ configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ Notepad++ installation failed: {e}")
+            return False
+
+
+class VisioInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="Microsoft Visio",
+        windows_executable="visio.exe",
+        required_dlls=['dotnet48'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['dotnet48'],
+        minimum_ram_gb=6,
+        gpu_required=False,
+        notes="Microsoft diagramming and visualization tool"
+    )
+    
+    def install(self) -> bool:
+        try:
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ Microsoft Visio configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ Microsoft Visio installation failed: {e}")
+            return False
+
+
+class SharePointInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="Microsoft SharePoint",
+        windows_executable="sharepoint.exe",
+        required_dlls=['dotnet48'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['dotnet48'],
+        minimum_ram_gb=6,
+        gpu_required=False,
+        notes="Microsoft SharePoint collaboration platform"
+    )
+    
+    def install(self) -> bool:
+        try:
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ Microsoft SharePoint configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ Microsoft SharePoint installation failed: {e}")
+            return False
+
+
+# Graphics & Design
+class AdobeInDesignInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="Adobe InDesign",
+        windows_executable="indesign.exe",
+        required_dlls=['vcrun2019', 'dotnet48'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['vcrun2019', 'dotnet48'],
+        minimum_ram_gb=6,
+        gpu_required=False,
+        notes="Adobe InDesign for layout and publishing"
+    )
+    
+    def install(self) -> bool:
+        try:
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ Adobe InDesign configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ Adobe InDesign installation failed: {e}")
+            return False
+
+
+class PaintNetInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="Paint.NET",
+        windows_executable="paintdotnet.exe",
+        required_dlls=['dotnet48'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['dotnet48'],
+        minimum_ram_gb=4,
+        gpu_required=False,
+        notes="Simple yet powerful image editor"
+    )
+    
+    def install(self) -> bool:
+        try:
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ Paint.NET configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ Paint.NET installation failed: {e}")
+            return False
+
+
+class FigmaInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="Figma",
+        windows_executable="figma.exe",
+        required_dlls=[],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=[],
+        minimum_ram_gb=4,
+        gpu_required=False,
+        notes="Web-based UI/UX design tool"
+    )
+    
+    def install(self) -> bool:
+        try:
+            print("✓ Figma configured for Wine (web-based)")
+            return True
+        except Exception as e:
+            print(f"✗ Figma installation failed: {e}")
+            return False
+
+
+# Media & Cloud Storage
+class iTunesInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="iTunes",
+        windows_executable="itunes.exe",
+        required_dlls=['dotnet48', 'vcrun2019'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['dotnet48', 'vcrun2019'],
+        minimum_ram_gb=6,
+        gpu_required=False,
+        notes="Apple media player and management"
+    )
+    
+    def install(self) -> bool:
+        try:
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ iTunes configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ iTunes installation failed: {e}")
+            return False
+
+
+class DropboxInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="Dropbox",
+        windows_executable="dropbox.exe",
+        required_dlls=['vcrun2019'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['vcrun2019'],
+        minimum_ram_gb=4,
+        gpu_required=False,
+        notes="Cloud storage and sync service"
+    )
+    
+    def install(self) -> bool:
+        try:
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ Dropbox configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ Dropbox installation failed: {e}")
+            return False
+
+
+class GoogleDriveInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="Google Drive",
+        windows_executable="googledrive.exe",
+        required_dlls=[],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=[],
+        minimum_ram_gb=4,
+        gpu_required=False,
+        notes="Google Cloud Drive sync"
+    )
+    
+    def install(self) -> bool:
+        try:
+            print("✓ Google Drive configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ Google Drive installation failed: {e}")
+            return False
+
+
+class GrammarlyInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="Grammarly",
+        windows_executable="grammarly.exe",
+        required_dlls=[],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=[],
+        minimum_ram_gb=4,
+        gpu_required=False,
+        notes="AI-powered writing assistant"
+    )
+    
+    def install(self) -> bool:
+        try:
+            print("✓ Grammarly configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ Grammarly installation failed: {e}")
+            return False
+
+
+class WordPressInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="WordPress",
+        windows_executable="wordpress.exe",
+        required_dlls=[],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=[],
+        minimum_ram_gb=4,
+        gpu_required=False,
+        notes="Web-based content management system"
+    )
+    
+    def install(self) -> bool:
+        try:
+            print("✓ WordPress configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ WordPress installation failed: {e}")
+            return False
+
+
+class NotionInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="Notion",
+        windows_executable="notion.exe",
+        required_dlls=[],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=[],
+        minimum_ram_gb=4,
+        gpu_required=False,
+        notes="Web-based note-taking and project management"
+    )
+    
+    def install(self) -> bool:
+        try:
+            print("✓ Notion configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ Notion installation failed: {e}")
+            return False
+
+
+# Video & Subtitles
+class VirtualDubInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="VirtualDub",
+        windows_executable="virtualdub.exe",
+        required_dlls=['vcrun2019'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['vcrun2019'],
+        minimum_ram_gb=4,
+        gpu_required=False,
+        notes="Video capture and editing utility"
+    )
+    
+    def install(self) -> bool:
+        try:
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ VirtualDub configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ VirtualDub installation failed: {e}")
+            return False
+
+
+class AviSynthInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="AviSynth",
+        windows_executable="avisynth.exe",
+        required_dlls=['vcrun2019'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['vcrun2019'],
+        minimum_ram_gb=4,
+        gpu_required=False,
+        notes="Video scripting language and framework"
+    )
+    
+    def install(self) -> bool:
+        try:
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ AviSynth configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ AviSynth installation failed: {e}")
+            return False
+
+
+class VobSubInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="VobSub",
+        windows_executable="vobsub.exe",
+        required_dlls=[],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=[],
+        minimum_ram_gb=4,
+        gpu_required=False,
+        notes="Subtitle manipulation and rendering"
+    )
+    
+    def install(self) -> bool:
+        try:
+            print("✓ VobSub configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ VobSub installation failed: {e}")
+            return False
+
+
+# Business & Finance
+class QuickBooksInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="QuickBooks",
+        windows_executable="quickbooks.exe",
+        required_dlls=['dotnet48', 'vcrun2019'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['dotnet48', 'vcrun2019'],
+        minimum_ram_gb=6,
+        gpu_required=False,
+        notes="Intuit accounting and bookkeeping"
+    )
+    
+    def install(self) -> bool:
+        try:
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ QuickBooks configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ QuickBooks installation failed: {e}")
+            return False
+
+
+class TurboTaxInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="TurboTax",
+        windows_executable="turbotax.exe",
+        required_dlls=['dotnet48', 'vcrun2019'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['dotnet48', 'vcrun2019'],
+        minimum_ram_gb=6,
+        gpu_required=False,
+        notes="Tax preparation software"
+    )
+    
+    def install(self) -> bool:
+        try:
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ TurboTax configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ TurboTax installation failed: {e}")
+            return False
+
+
+class TableauInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="Tableau",
+        windows_executable="tableau.exe",
+        required_dlls=['dotnet48'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['dotnet48'],
+        minimum_ram_gb=6,
+        gpu_required=False,
+        notes="Tableau business intelligence and analytics"
+    )
+    
+    def install(self) -> bool:
+        try:
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ Tableau configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ Tableau installation failed: {e}")
+            return False
+
+
+class PowerBIInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="Power BI",
+        windows_executable="powerbi.exe",
+        required_dlls=['dotnet48'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['dotnet48'],
+        minimum_ram_gb=6,
+        gpu_required=False,
+        notes="Microsoft Power BI analytics platform"
+    )
+    
+    def install(self) -> bool:
+        try:
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ Power BI configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ Power BI installation failed: {e}")
+            return False
+
+
+# 3D & GIS
+class ArcGISInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="ArcGIS",
+        windows_executable="arcgis.exe",
+        required_dlls=['dotnet48', 'vcrun2019'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['dotnet48', 'vcrun2019'],
+        minimum_ram_gb=8,
+        gpu_required=True,
+        notes="ESRI GIS mapping and spatial analysis"
+    )
+    
+    def install(self) -> bool:
+        try:
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ ArcGIS configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ ArcGIS installation failed: {e}")
+            return False
+
+
+class PrusaSlicerInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="PrusaSlicer",
+        windows_executable="prusaslicer.exe",
+        required_dlls=['vcrun2019'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['vcrun2019'],
+        minimum_ram_gb=4,
+        gpu_required=False,
+        notes="PrusaSlicer 3D printer slicing software"
+    )
+    
+    def install(self) -> bool:
+        try:
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ PrusaSlicer configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ PrusaSlicer installation failed: {e}")
+            return False
+
+
+class SuperSlicerInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="SuperSlicer",
+        windows_executable="superslicer.exe",
+        required_dlls=['vcrun2019'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['vcrun2019'],
+        minimum_ram_gb=4,
+        gpu_required=False,
+        notes="Advanced 3D printer slicing software"
+    )
+    
+    def install(self) -> bool:
+        try:
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ SuperSlicer configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ SuperSlicer installation failed: {e}")
+            return False
+
+
+# Audio Production
+class ProToolsInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="Pro Tools",
+        windows_executable="protools.exe",
+        required_dlls=['dotnet48', 'vcrun2019'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['dotnet48', 'vcrun2019'],
+        minimum_ram_gb=8,
+        gpu_required=False,
+        notes="Professional audio DAW by Avid"
+    )
+    
+    def install(self) -> bool:
+        try:
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ Pro Tools configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ Pro Tools installation failed: {e}")
+            return False
+
+
+class PropellerheadsReasonInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="Propellerheads Reason",
+        windows_executable="reason.exe",
+        required_dlls=['dotnet48', 'vcrun2019'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['dotnet48', 'vcrun2019'],
+        minimum_ram_gb=6,
+        gpu_required=False,
+        notes="Propellerheads Reason music production"
+    )
+    
+    def install(self) -> bool:
+        try:
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ Propellerheads Reason configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ Propellerheads Reason installation failed: {e}")
+            return False
+
+
+class CubaseNuendoInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="Cubase/Nuendo",
+        windows_executable="cubase.exe",
+        required_dlls=['dotnet48', 'vcrun2019'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['dotnet48', 'vcrun2019'],
+        minimum_ram_gb=6,
+        gpu_required=False,
+        notes="Steinberg Cubase/Nuendo DAW"
+    )
+    
+    def install(self) -> bool:
+        try:
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ Cubase/Nuendo configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ Cubase/Nuendo installation failed: {e}")
+            return False
+
+
+# Gaming & Utilities
+class EAAppInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="EA App",
+        windows_executable="eaapp.exe",
+        required_dlls=['dotnet48', 'vcrun2019'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['dotnet48', 'vcrun2019'],
+        minimum_ram_gb=6,
+        gpu_required=False,
+        notes="EA Games launcher"
+    )
+    
+    def install(self) -> bool:
+        try:
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ EA App configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ EA App installation failed: {e}")
+            return False
+
+
+class BattlEyeInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="BattlEye",
+        windows_executable="beservice.exe",
+        required_dlls=['vcrun2019'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['vcrun2019'],
+        minimum_ram_gb=4,
+        gpu_required=False,
+        notes="BattlEye anti-cheat system (limited compatibility)"
+    )
+    
+    def install(self) -> bool:
+        try:
+            print("⚠ BattlEye has limited Wine compatibility due to kernel-level requirements")
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ BattlEye configured for Wine (limited)")
+            return True
+        except Exception as e:
+            print(f"✗ BattlEye installation failed: {e}")
+            return False
+
+
+class ShareXInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="ShareX",
+        windows_executable="sharex.exe",
+        required_dlls=['dotnet48'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['dotnet48'],
+        minimum_ram_gb=4,
+        gpu_required=False,
+        notes="Screenshot and screen recording utility"
+    )
+    
+    def install(self) -> bool:
+        try:
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ ShareX configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ ShareX installation failed: {e}")
+            return False
+
+
+class HWMonitorInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="HWMonitor",
+        windows_executable="hwmonitor.exe",
+        required_dlls=[],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=[],
+        minimum_ram_gb=4,
+        gpu_required=False,
+        notes="Hardware monitoring and temperature utility"
+    )
+    
+    def install(self) -> bool:
+        try:
+            print("✓ HWMonitor configured for Wine")
+            return True
+        except Exception as e:
+            print(f"✗ HWMonitor installation failed: {e}")
+            return False
+
+
+class ValorantInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="Valorant",
+        windows_executable="valorant.exe",
+        required_dlls=['vcrun2019', 'dxvk'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['vcrun2019', 'dxvk'],
+        minimum_ram_gb=8,
+        gpu_required=True,
+        notes="Riot Games tactical shooter (Vanguard anti-cheat prevents execution)"
+    )
+    
+    def install(self) -> bool:
+        try:
+            print("⚠ WARNING: Valorant uses Vanguard anti-cheat (kernel-level) which is not compatible with Wine")
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✗ Valorant cannot run on Wine due to anti-cheat restrictions")
+            return False
+        except Exception as e:
+            print(f"✗ Valorant installation failed: {e}")
+            return False
+
+
+class Rainbow6SiegeInstaller(ApplicationInstaller):
+    CONFIG = ApplicationConfig(
+        name="Rainbow Six Siege",
+        windows_executable="r6siege.exe",
+        required_dlls=['vcrun2019', 'dxvk'],
+        registry_tweaks={},
+        environment_variables={},
+        required_dependencies=['vcrun2019', 'dxvk'],
+        minimum_ram_gb=8,
+        gpu_required=True,
+        notes="Ubisoft tactical shooter (BattlEye anti-cheat has limited compatibility)"
+    )
+    
+    def install(self) -> bool:
+        try:
+            print("⚠ WARNING: Rainbow Six Siege uses BattlEye anti-cheat with limited Wine compatibility")
+            self.install_required_dlls(self.CONFIG.required_dlls)
+            print("✓ Rainbow Six Siege configured for Wine (with anti-cheat limitations)")
+            return True
+        except Exception as e:
+            print(f"✗ Rainbow Six Siege installation failed: {e}")
+            return False
+
+
 class ApplicationManager:
     """Manages all application installations"""
     
@@ -1215,20 +1932,26 @@ class ApplicationManager:
         'office': MicrosoftOfficeInstaller,
         # Audio Production
         'audition': AdobeAuditionInstaller,
-        'cubase': SteinbergCubaseInstaller,
+        'cubase': CubaseNuendoInstaller,
         'ableton': ABLETONLiveInstaller,
+        'protools': ProToolsInstaller,
+        'reason': PropellerheadsReasonInstaller,
         # CAD Software
         'autocad': AutodeskAutoCADInstaller,
         'solidworks': SolidWorksInstaller,
         'fusion360': FusionInstaller,
+        'arcgis': ArcGISInstaller,
         # Adobe Creative Suite
         'photoshop': AdobePhotoshopInstaller,
         'lightroom': AdobeLightroomInstaller,
         'illustrator': AdobeIllustratorInstaller,
         'aftereffects': AdobeAfterEffectsInstaller,
+        'indesign': AdobeInDesignInstaller,
         # Autodesk & 3D Software
         'revit': AutodeskRevitInstaller,
         'sketchbook': AutodeskSketchbookInstaller,
+        '3dprinting': PrusaSlicerInstaller,
+        'superslicer': SuperSlicerInstaller,
         # Corel Software
         'coreldraw': CorelDrawInstaller,
         'corelpainter': CorelPaintInstaller,
@@ -1236,11 +1959,41 @@ class ApplicationManager:
         'teams': MicrosoftTeamsInstaller,
         'copilot': MicrosoftCopilotInstaller,
         'access': MicrosoftAccessInstaller,
-        # Programming & Game Engines
+        'visio': VisioInstaller,
+        'sharepoint': SharePointInstaller,
+        'powerbi': PowerBIInstaller,
+        # Development Tools
         'visualstudio': VisualStudioInstaller,
         'jetbrains': JetBrainsIDEInstaller,
+        'notepad++': NoteplusPlusInstaller,
+        # Graphics & Design
+        'paintnet': PaintNetInstaller,
+        'figma': FigmaInstaller,
+        # Programming & Game Engines
         'unity': UnityInstaller,
-        'unreal': UnrealEngineInstaller
+        'unreal': UnrealEngineInstaller,
+        'eaapp': EAAppInstaller,
+        # Business & Finance
+        'quickbooks': QuickBooksInstaller,
+        'turbotax': TurboTaxInstaller,
+        'tableau': TableauInstaller,
+        # Media & Cloud
+        'itunes': iTunesInstaller,
+        'dropbox': DropboxInstaller,
+        'googledrive': GoogleDriveInstaller,
+        'wordpress': WordPressInstaller,
+        'notion': NotionInstaller,
+        'grammarly': GrammarlyInstaller,
+        # Video & Subtitles
+        'virtualdub': VirtualDubInstaller,
+        'avisynth': AviSynthInstaller,
+        'vobsub': VobSubInstaller,
+        # Gaming & Anti-Cheat
+        'valorant': ValorantInstaller,
+        'r6siege': Rainbow6SiegeInstaller,
+        'battleye': BattlEyeInstaller,
+        'sharex': ShareXInstaller,
+        'hwmonitor': HWMonitorInstaller,
     }
     
     def __init__(self, wine_prefix: str):

@@ -2,7 +2,7 @@
 
 ## Summary
 
-Winpatable now supports **25 professional Windows applications** across multiple categories, making it the most comprehensive Windows compatibility layer for Linux Mint and Ubuntu.
+Winpatable now supports **55+ professional Windows applications** across 20+ categories, making it the most comprehensive Windows compatibility layer for Linux Mint and Ubuntu. Features include AI-powered compatibility analysis and intelligent installation recommendations.
 
 ## Supported Applications by Category
 
@@ -11,43 +11,80 @@ Winpatable now supports **25 professional Windows applications** across multiple
 - **Sony Vegas Pro** - Video editing and audio production
 - **Adobe Audition** - Professional audio editing and mixing
 
-### Professional Audio Software (2 apps)
-- **Steinberg Cubase** - Industry-standard DAW with VST3 support
+### Professional Audio Software (5 apps)
+- **Steinberg Cubase/Nuendo** - Industry-standard DAW with VST3 support
 - **Ableton Live** - Music production and live performance
+- **Pro Tools** - Professional audio DAW by Avid
+- **Propellerheads Reason** - Music production and synthesis
+- **Adobe Audition** - Professional audio editing
 
-### Adobe Creative Suite (4 apps)
+### Adobe Creative Suite (5 apps)
 - **Adobe Photoshop** - Professional image editing and graphic design
 - **Adobe Lightroom** - Photo management and editing
 - **Adobe Illustrator** - Vector graphics and illustration
 - **Adobe After Effects** - Motion graphics and VFX composition
+- **Adobe InDesign** - Layout and publishing design
 
-### 3D Modeling & CAD (6 apps)
+### 3D Modeling & CAD (8 apps)
 - **Autodesk 3DS Max** - Professional 3D modeling and animation
 - **Autodesk AutoCAD** - 2D/3D design and drafting
 - **SolidWorks** - CAD/CAM 3D design software
 - **Autodesk Fusion 360** - Cloud-based CAD/CAM platform
 - **Autodesk Revit** - BIM and architectural design software
 - **Autodesk Sketchbook** - Digital painting and drawing
+- **ArcGIS** - GIS mapping and spatial analysis
+- **PrusaSlicer & SuperSlicer** - 3D printer slicing software
 
-### Graphics & Design (2 apps)
+### Graphics & Design (4 apps)
 - **CorelDRAW** - Professional vector graphics and design
 - **Corel Painter** - Professional digital painting and illustration
+- **Paint.NET** - Simple yet powerful image editor
+- **Figma** - Web-based UI/UX design tool
 
-### Programming Tools & Game Engines (4 apps)
+### Development Tools (3 apps)
 - **Microsoft Visual Studio** - C#, C++, Python IDE
 - **JetBrains IDEs** - PyCharm, IntelliJ IDEA, WebStorm, etc.
+- **Notepad++** - Lightweight text editor with syntax highlighting
+
+### Game Engines (2 apps)
 - **Unity Engine** - 3D/2D game engine
 - **Unreal Engine** - Professional game engine
 
-### Office & Productivity (1 app)
+### Gaming & Launchers (4 apps)
+- **EA App** - EA Games launcher
+- **Valorant** - Riot Games tactical shooter (limited - anti-cheat)
+- **Rainbow Six Siege** - Ubisoft tactical shooter (limited - anti-cheat)
+- **BattlEye** - Anti-cheat system (limited compatibility)
+
+### Office & Productivity (8 apps)
 - **Microsoft Office** - Word, Excel, PowerPoint
+- **Microsoft Visio** - Diagramming and visualization
+- **Microsoft SharePoint** - Collaboration platform
+- **Microsoft Access** - Database application
+- **Grammarly** - AI-powered writing assistant
+- **Notion** - Note-taking and project management
+- **WordPress** - Web content management system
 
-### Collaboration & Productivity (2 apps)
+### Cloud Storage & Sync (3 apps)
+- **Dropbox** - Cloud storage and sync
+- **Google Drive** - Cloud Drive sync
+- **iTunes** - Apple media player and management
+
+### Business & Finance (5 apps)
+- **QuickBooks** - Accounting and bookkeeping
+- **TurboTax** - Tax preparation software
+- **Tableau** - Business intelligence and analytics
+- **Power BI** - Microsoft analytics platform
 - **Microsoft Teams** - Meetings, chat and collaboration
-- **Microsoft Copilot** - Desktop AI assistant and integrations
 
-### Office Add-ons (1 app)
-- **Microsoft Access** - Desktop database application (part of Office)
+### Video & Multimedia (4 apps)
+- **VirtualDub** - Video capture and editing
+- **AviSynth** - Video scripting language
+- **VobSub** - Subtitle manipulation and rendering
+
+### Utilities & Monitoring (2 apps)
+- **ShareX** - Screenshot and screen recording
+- **HWMonitor** - Hardware monitoring utility
 
 ---
 

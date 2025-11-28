@@ -108,8 +108,8 @@ class TestApplicationManager(unittest.TestCase):
     def test_total_apps_count(self):
         """Test that all expected apps are available"""
         apps = self.manager.list_applications()
-        # original + added apps = 25 total
-        self.assertEqual(len(apps), 25)
+        # original 14 + 7 new Adobe/Autodesk/Corel + 3 Microsoft + 31 new expanded = 55 total
+        self.assertEqual(len(apps), 55)
     
     def test_get_installer(self):
         """Test getting application installer"""
