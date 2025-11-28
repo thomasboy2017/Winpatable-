@@ -2,7 +2,7 @@
 
 ## Summary
 
-Winpatable now supports **14 professional Windows applications** across multiple categories, making it the most comprehensive Windows compatibility layer for Linux Mint and Ubuntu.
+Winpatable now supports **25 professional Windows applications** across multiple categories, making it the most comprehensive Windows compatibility layer for Linux Mint and Ubuntu.
 
 ## Supported Applications by Category
 
@@ -15,11 +15,23 @@ Winpatable now supports **14 professional Windows applications** across multiple
 - **Steinberg Cubase** - Industry-standard DAW with VST3 support
 - **Ableton Live** - Music production and live performance
 
-### 3D Modeling & CAD (5 apps)
+### Adobe Creative Suite (4 apps)
+- **Adobe Photoshop** - Professional image editing and graphic design
+- **Adobe Lightroom** - Photo management and editing
+- **Adobe Illustrator** - Vector graphics and illustration
+- **Adobe After Effects** - Motion graphics and VFX composition
+
+### 3D Modeling & CAD (6 apps)
 - **Autodesk 3DS Max** - Professional 3D modeling and animation
 - **Autodesk AutoCAD** - 2D/3D design and drafting
 - **SolidWorks** - CAD/CAM 3D design software
 - **Autodesk Fusion 360** - Cloud-based CAD/CAM platform
+- **Autodesk Revit** - BIM and architectural design software
+- **Autodesk Sketchbook** - Digital painting and drawing
+
+### Graphics & Design (2 apps)
+- **CorelDRAW** - Professional vector graphics and design
+- **Corel Painter** - Professional digital painting and illustration
 
 ### Programming Tools & Game Engines (4 apps)
 - **Microsoft Visual Studio** - C#, C++, Python IDE
@@ -30,9 +42,26 @@ Winpatable now supports **14 professional Windows applications** across multiple
 ### Office & Productivity (1 app)
 - **Microsoft Office** - Word, Excel, PowerPoint
 
+### Collaboration & Productivity (2 apps)
+- **Microsoft Teams** - Meetings, chat and collaboration
+- **Microsoft Copilot** - Desktop AI assistant and integrations
+
+### Office Add-ons (1 app)
+- **Microsoft Access** - Desktop database application (part of Office)
+
 ---
 
 ## Installation Commands
+
+### Adobe Creative Suite
+```bash
+winpatable install-app photoshop --installer /path/to/Photoshop_2024.exe
+winpatable install-app lightroom --installer /path/to/Lightroom_2024.exe
+winpatable install-app illustrator --installer /path/to/Illustrator_2024.exe
+winpatable install-app aftereffects --installer /path/to/AfterEffects_2024.exe
+winpatable install-app teams --installer /path/to/TeamsSetup.exe
+winpatable install-app copilot --installer /path/to/CopilotSetup.exe
+```
 
 ### Audio Software
 ```bash
@@ -46,6 +75,20 @@ winpatable install-app ableton --installer /path/to/AbeletonLive_12.exe
 winpatable install-app autocad --installer /path/to/AutoCAD_2024.exe
 winpatable install-app solidworks --installer /path/to/SolidWorks_2024.exe
 winpatable install-app fusion360 --installer /path/to/Fusion360Setup.exe
+winpatable install-app revit --installer /path/to/Revit_2024.exe
+```
+
+### 3D Modeling & Design
+```bash
+winpatable install-app 3dsmax --installer /path/to/3DSMax_2024.exe
+winpatable install-app sketchbook --installer /path/to/Sketchbook_2024.exe
+```
+
+### Graphics & Design
+```bash
+winpatable install-app coreldraw --installer /path/to/CorelDRAW_2024.exe
+winpatable install-app corelpainter --installer /path/to/CorelPainter_2024.exe
+winpatable install-app access --installer /path/to/AccessSetup.exe
 ```
 
 ### Programming & Game Engines
@@ -61,21 +104,21 @@ winpatable install-app unreal --installer /path/to/UnrealEngineSetup.exe
 ## Hardware Requirements
 
 ### Minimum Configuration (Most Applications)
-- **CPU**: Intel Core i5 / AMD Ryzen 5 (x64)
-- **RAM**: 8 GB
+- **CPU**: Intel Core i3 (3rd Gen+) / AMD Ryzen 3 (x64)
+- **RAM**: 4 GB
 - **GPU**: Integrated graphics
-- **Storage**: 30 GB SSD
+- **Storage**: 20 GB SSD
 
-### Recommended Configuration (Video/3D/CAD)
-- **CPU**: Intel Core i7/Xeon / AMD Ryzen 7
+### Recommended Configuration (Photo/Graphics/Light CAD)
+- **CPU**: Intel Core i5 (5th Gen+) / AMD Ryzen 5
+- **RAM**: 8-16 GB
+- **GPU**: Integrated or dedicated graphics
+- **Storage**: 40+ GB SSD
+
+### High-Performance Configuration (Video/3D/Professional CAD)
+- **CPU**: Intel Core i7+ (6th Gen+) / AMD Ryzen 7+
 - **RAM**: 16-32 GB
-- **GPU**: NVIDIA RTX 2070+ / AMD Radeon RX / Intel Arc
-- **Storage**: 60+ GB SSD
-
-### High-End Configuration (Unreal Engine, SolidWorks)
-- **CPU**: Intel Core i7/Xeon / AMD Ryzen 7 (6+ cores)
-- **RAM**: 32 GB
-- **GPU**: NVIDIA Quadro/RTX or AMD Radeon Pro (6GB+ VRAM)
+- **GPU**: NVIDIA GTX 1070+ / AMD Radeon RX 5700+
 - **Storage**: 100+ GB SSD
 
 ---

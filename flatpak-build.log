@@ -1,0 +1,5 @@
+Can't parse 'org.winpatable.Winpatable.yml': 140:24: could not find expected ':'
+
+(flatpak-builder:112367): Json-WARNING **: 06:18:03.075: Failed to deserialize "metadata" property of type "gchararray" for an object of type "BuilderManifest"
+error: org.freedesktop.Sdk/x86_64/23.08 not installed
+Failed to init: Unable to find sdk org.freedesktop.Sdk version 23.08

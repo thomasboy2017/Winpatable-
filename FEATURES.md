@@ -19,15 +19,23 @@ Winpatable makes it easy to run Windows applications on Linux with:
 | App | Support | Speed | Requirements |
 |-----|---------|-------|---|
 | Microsoft Office | ✅ Excellent | Native | 4GB RAM, integrated GPU |
-| Adobe Premiere Pro | ✅ Excellent | ~95% | 16GB RAM, NVIDIA GPU |
+| Adobe Photoshop | ✅ Excellent | ~95% | 4GB RAM, integrated GPU |
+| Adobe Lightroom | ✅ Excellent | ~95% | 4GB RAM, integrated GPU |
+| Adobe Illustrator | ✅ Excellent | ~95% | 4GB RAM, integrated GPU |
+| Adobe Premiere Pro | ✅ Excellent | ~95% | 8GB+ RAM, NVIDIA GPU |
+| Adobe After Effects | ✅ Excellent | ~95% | 8GB+ RAM, optional GPU |
 | Sony Vegas Pro | ✅ Excellent | ~95% | 8GB RAM, optional GPU |
-| Autodesk 3DS Max | ✅ Excellent | ~95% | 16GB RAM, GPU |
+| Autodesk 3DS Max | ✅ Excellent | ~95% | 8GB+ RAM, GPU |
+| Autodesk Revit | ✅ Excellent | ~95% | 8GB+ RAM, optional GPU |
+| CorelDRAW | ✅ Excellent | ~95% | 4GB RAM, integrated GPU |
+| Corel Painter | ✅ Excellent | ~95% | 4GB RAM, integrated GPU |
+| Autodesk Sketchbook | ✅ Excellent | ~95% | 4GB RAM, integrated GPU |
 
 ### 🖥️ Hardware Support
 
 **CPUs**:
-- Intel Core i5/i7/i9 (Skylake+)
-- AMD Ryzen 5/7/9 (Zen+)
+- Intel Core i3 (3rd Gen+), i5, i7, i9
+- AMD Ryzen 3, 5, 7, 9
 - Xeon processors
 - EPYC processors
 
@@ -39,7 +47,7 @@ Winpatable makes it easy to run Windows applications on Linux with:
 
 **RAM**:
 - Minimum: 4GB
-- Recommended: 16GB for professional work
+- Recommended: 8-16GB for professional work
 - Tested up to 128GB
 
 ### 🐧 OS Support

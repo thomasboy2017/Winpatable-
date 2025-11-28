@@ -44,8 +44,16 @@ check_system() {
         exit 1
     fi
     
-    if ! grep -E "ubuntu|linuxmint|debian" /etc/os-release > /dev/null 2>&1; then
-        print_warning "This is optimized for Ubuntu/Mint, but may work on other Debian-based systems"
+    # Prefer parsing /etc/os-release for robust detection
+    if [ -f /etc/os-release ]; then
+        # shellcheck disable=SC1091
+        . /etc/os-release
+        os_id="${ID:-}"; os_name="${NAME:-}"
+        if ! echo "${os_id,,} ${os_name,,}" | grep -E "ubuntu|linuxmint|mint|debian" > /dev/null 2>&1; then
+            print_warning "This is optimized for Ubuntu/Mint, but may work on other Debian-based systems"
+        fi
+    else
+        print_warning "Unable to detect OS (missing /etc/os-release). Proceeding with caution."
     fi
     print_success "Linux system detected"
     
@@ -72,15 +80,26 @@ check_system() {
 install_dependencies() {
     print_header "Installing Dependencies"
     
+    # Detect package manager
+    PKG_MGR="apt"
+    if ! command -v "$PKG_MGR" >/dev/null 2>&1; then
+        if command -v apt-get >/dev/null 2>&1; then
+            PKG_MGR="apt-get"
+        else
+            print_error "No supported Debian package manager found (apt/apt-get)"
+            exit 1
+        fi
+    fi
+
     # Update package manager
     print_info "Updating package manager..."
-    sudo apt update > /dev/null 2>&1
+    sudo "$PKG_MGR" update > /dev/null 2>&1
     print_success "Package manager updated"
     
     # Check if Python is installed
     if ! command -v python3 &> /dev/null; then
         print_info "Installing Python 3..."
-        sudo apt install -y python3 python3-pip > /dev/null 2>&1
+        sudo "$PKG_MGR" install -y python3 python3-pip > /dev/null 2>&1
         print_success "Python 3 installed"
     else
         print_success "Python 3 already installed"
@@ -89,7 +108,7 @@ install_dependencies() {
     # Install basic tools
     TOOLS="git curl wget build-essential"
     print_info "Installing basic tools..."
-    sudo apt install -y $TOOLS > /dev/null 2>&1
+    sudo "$PKG_MGR" install -y $TOOLS > /dev/null 2>&1
     print_success "Basic tools installed"
 }
 
