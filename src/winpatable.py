@@ -603,6 +603,7 @@ Examples:
         report_feature = report_subparsers.add_parser('feature', help='Request a feature')
         report_feature.add_argument('--title', help='Short title for the feature request')
         report_feature.add_argument('--description', help='Detailed description of the feature request')
+        report_subparsers.add_parser('gui', help='Open a simple GUI to report bugs/features')
         
         args = parser.parse_args()
         
@@ -633,6 +634,8 @@ Examples:
         else:
             print(f"Unknown command: {args.command}")
             parser.print_help()
+
+    # GUI route handled by the main CLI; use the full cmd_report implementation below.
 
     def cmd_report(self, args):
         """Create a bug or feature report saved locally and optionally open GitHub issue URL"""

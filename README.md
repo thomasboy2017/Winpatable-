@@ -185,6 +185,35 @@ winpatable report bug
 winpatable report feature --title "Add dark mode" --description "Please add a dark mode to the UI"
 ```
 
+GUI usage (for everyday, non-CLI users):
+```bash
+# Open a simple reporting window (Tkinter)
+winpatable report gui
+```
+
+Notes:
+- The GUI will save a local JSON report in `~/.winpatable/reports/`.
+- If you set the environment variable `WINPATABLE_GITHUB_TOKEN`, the GUI can optionally create the GitHub issue via API (opt-in).
+
+### Update Freeze Policy
+
+Per current policy, non-security updates will be held until `2026-01-01` by default.
+This means that feature/regular releases will not be automatically installed until that date — only security releases will be applied.
+
+To change this behaviour edit `~/.winpatable/updater.json` and update the `freeze_until` value (ISO date), `release_channel` ("stable" or "beta"), or the intervals.
+
+Example (`~/.winpatable/updater.json`):
+```json
+{
+	"last_check_security": 0,
+	"last_check_feature": 0,
+	"security_interval_days": 7,
+	"feature_interval_days": 30,
+	"release_channel": "stable",
+	"freeze_until": "2026-01-01"
+}
+```
+
 ```
 
 ## ❓ FAQ

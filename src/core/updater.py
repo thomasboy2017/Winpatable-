@@ -53,7 +53,10 @@ class UpdateChecker:
             'last_check_security': 0,
             'last_check_feature': 0,
             'security_interval_days': DEFAULT_SECURITY_INTERVAL_DAYS,
-            'feature_interval_days': DEFAULT_FEATURE_INTERVAL_DAYS
+            'feature_interval_days': DEFAULT_FEATURE_INTERVAL_DAYS,
+            'release_channel': 'stable',  # stable|beta|all
+            # Freeze non-security updates until this date (ISO format). Per policy, hold until 2026-01-01
+            'freeze_until': '2026-01-01'
         }
 
     @staticmethod
@@ -262,8 +265,47 @@ def auto_update(check_only: bool = False, verbose: bool = False, mode: str = 'au
             checker.display_update_info()
             is_sec = checker.is_security_release()
 
+            # Respect freeze_until: do not apply non-security updates until freeze date
+            freeze_until = cfg.get('freeze_until')
+            if freeze_until:
+                try:
+                    # parse YYYY-MM-DD
+                    fy, fm, fd = [int(x) for x in str(freeze_until).split('-')]
+                    freeze_ts = int(time.mktime((fy, fm, fd, 0, 0, 0, 0, 0, -1)))
+                except Exception:
+                    freeze_ts = 0
+            else:
+                freeze_ts = 0
+
+            # Release channel handling: skip pre-releases/beta when on stable channel
+            channel = cfg.get('release_channel', 'stable')
+            is_prerelease = bool(checker.latest_release.get('prerelease')) if checker.latest_release else False
+            tag = str(checker.latest_release.get('tag_name', '')).lower() if checker.latest_release else ''
+            is_beta_tag = any(x in tag for x in ['beta', 'rc', 'alpha']) or is_prerelease
+
+            # If channel is 'stable' and release is beta/prerelease, treat as non-applicable
+            if channel == 'stable' and is_beta_tag:
+                if verbose:
+                    print("✓ Skipping prerelease/beta update while on 'stable' channel")
+                # update last_check timestamps for scheduled categories and exit
+                if perform_security:
+                    cfg['last_check_security'] = now
+                if perform_feature:
+                    cfg['last_check_feature'] = now
+                UpdateChecker.save_updater_config(cfg)
+                return True
+
             # Decide whether to apply based on classification
             if (is_sec and perform_security) or (not is_sec and perform_feature):
+                # If this is a non-security release but freeze is active, do not apply
+                if not is_sec and freeze_ts and now < freeze_ts:
+                    if verbose:
+                        print(f"✋ Non-security updates are frozen until {freeze_until}. Skipping install.")
+                    # Still update last_check_feature timestamp
+                    if perform_feature:
+                        cfg['last_check_feature'] = now
+                    UpdateChecker.save_updater_config(cfg)
+                    return True
                 if check_only:
                     # Update last_check times and exit (don't install)
                     if is_sec:
