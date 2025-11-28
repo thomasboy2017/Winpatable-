@@ -124,7 +124,17 @@ def launch_gui():
     desc.grid(column=0, row=4, columnspan=6, sticky='nsew')
 
     # GitHub options
-    has_token = bool(os.environ.get('WINPATABLE_GITHUB_TOKEN'))
+    # Token can be provided via env var or saved token file
+    token_path = Path.home() / '.winpatable' / 'github_token'
+    env_token = os.environ.get('WINPATABLE_GITHUB_TOKEN')
+    file_token = None
+    if token_path.exists():
+        try:
+            file_token = token_path.read_text().strip()
+        except Exception:
+            file_token = None
+
+    has_token = bool(env_token or file_token)
     create_issue_var = tk.BooleanVar(value=False)
     create_issue_chk = ttk.Checkbutton(frm, text='Create GitHub issue (requires WINPATABLE_GITHUB_TOKEN in environment)', variable=create_issue_var)
     create_issue_chk.grid(column=0, row=5, columnspan=4, sticky='w', pady=(8,0))
@@ -149,7 +159,12 @@ def launch_gui():
 
         # If token present and user wants to create via API
         if create_issue_var.get() and has_token:
-            ok = try_create_github_issue(title, body)
+                # prefer env token, otherwise file token
+                if env_token:
+                    os.environ['WINPATABLE_GITHUB_TOKEN'] = env_token
+                elif file_token:
+                    os.environ['WINPATABLE_GITHUB_TOKEN'] = file_token
+                ok = try_create_github_issue(title, body)
             if ok:
                 messagebox.showinfo('Issue Created', 'Created issue on GitHub and opened it in your browser.')
             else:

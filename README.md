@@ -214,6 +214,51 @@ Example (`~/.winpatable/updater.json`):
 }
 ```
 
+### GitHub Token (optional)
+
+To enable automated GitHub issue creation from the GUI you can provide a Personal Access Token (PAT). You can set it via environment variable `WINPATABLE_GITHUB_TOKEN` (temporary) or save it securely with the CLI:
+
+```bash
+# Interactive prompt
+winpatable auth github --set-token
+
+# Or provide token directly (avoid shell history):
+winpatable auth github --set-token "ghp_..."
+```
+
+Token storage path: `~/.winpatable/github_token` (mode 600). The GUI will read that file and enable API-based issue creation.
+
+### Install systemd user timer (optional)
+
+You can register a systemd user timer to run the updater daily. The updater will still respect the weekly security/monthly feature schedule and the freeze policy.
+
+```bash
+# Enable (creates user unit files and starts timer)
+winpatable updater enable-timer
+
+# Disable and remove unit files
+winpatable updater disable-timer
+
+# Check status
+winpatable updater status
+```
+
+If systemd user services aren't available (containers/minimal systems), the command will print guidance on alternatives (cron).
+
+### Release Manifest (optional)
+
+For more control over release channels you can provide a JSON manifest mapping tags to channels. Example manifest (host as raw JSON on a webserver or repo):
+
+```json
+{
+	"v1.5.0": { "channel": "stable" },
+	"v1.6.0-beta": { "channel": "beta" }
+}
+```
+
+Set the manifest URL in `~/.winpatable/updater.json` using the `release_manifest_url` key. When present Winpatable will prefer the manifest mapping for channel decisions.
+
+
 ```
 
 ## ❓ FAQ

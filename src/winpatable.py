@@ -27,6 +27,7 @@ from src.core.updater import auto_update, UpdateChecker
 from src.core.ai_assistant import WinpatableAI, ai_analyze_app
 from src.core.performance import ConfigurationProfile, PerformanceBenchmark, PerformanceCache
 from src.core.security import SecurityAuditor, MalwareDetector, CodeSigner
+import stat
 
 # ANSI Colors
 class Colors:
@@ -500,6 +501,97 @@ class WinpatableUI:
                 print_error("Failed to install ClamAV")
             
             print_color("="*70 + "\n", Colors.BOLD)
+
+    def cmd_auth(self, args):
+        """Authentication helpers (GitHub token storage)"""
+        if not hasattr(args, 'auth_command') or args.auth_command != 'github':
+            print("Usage: winpatable auth github --set-token [TOKEN]")
+            return
+
+        token_arg = args.set_token
+        token_path = Path.home() / '.winpatable' / 'github_token'
+        os.makedirs(token_path.parent, exist_ok=True)
+
+        if token_arg is True:
+            # interactive prompt
+            if sys.stdin.isatty():
+                token = input('Enter GitHub personal access token (will be stored locally, permission 600): ').strip()
+            else:
+                print_error('No token provided and not interactive')
+                return
+        else:
+            token = token_arg
+
+        if not token:
+            print_error('Token is empty; aborting')
+            return
+
+        try:
+            with open(token_path, 'w') as fh:
+                fh.write(token.strip())
+            os.chmod(token_path, stat.S_IRUSR | stat.S_IWUSR)
+            print_success(f'GitHub token saved to {token_path} (mode 600)')
+        except Exception as e:
+            print_error(f'Failed to save token: {e}')
+
+    def cmd_updater(self, args):
+        """Manage updater systemd user timer"""
+        cmd = getattr(args, 'updater_command', None)
+        unit_dir = Path.home() / '.config' / 'systemd' / 'user'
+        service_file = unit_dir / 'winpatable-update.service'
+        timer_file = unit_dir / 'winpatable-update.timer'
+        unit_dir.mkdir(parents=True, exist_ok=True)
+
+        def write_unit():
+            service = f"""[Unit]\nDescription=Winpatable Update Service\n\n[Service]\nType=oneshot\nExecStart={sys.executable} -m src.core.updater --check-only\n"""
+            timer = f"""[Unit]\nDescription=Daily Winpatable Update Timer\n\n[Timer]\nOnCalendar=daily\nPersistent=true\n\n[Install]\nWantedBy=timers.target\n"""
+            try:
+                with open(service_file, 'w') as fh:
+                    fh.write(service)
+                with open(timer_file, 'w') as fh:
+                    fh.write(timer)
+                print_success(f'Wrote unit files to {unit_dir}')
+                return True
+            except Exception as e:
+                print_error(f'Failed to write unit files: {e}')
+                return False
+
+        if cmd == 'enable-timer':
+            ok = write_unit()
+            if not ok:
+                return
+            # Try to enable via systemctl --user
+            try:
+                subprocess.run(['systemctl', '--user', 'daemon-reload'], check=True)
+                subprocess.run(['systemctl', '--user', 'enable', '--now', 'winpatable-update.timer'], check=True)
+                print_success('Enabled and started winpatable-update.timer (systemd user)')
+            except Exception as e:
+                print_warning(f'Could not enable systemd timer: {e}')
+                print('If your system does not support systemd user services, you can run the updater daily via cron or a scheduler.')
+
+        elif cmd == 'disable-timer':
+            try:
+                subprocess.run(['systemctl', '--user', 'disable', '--now', 'winpatable-update.timer'], check=True)
+                print_success('Disabled winpatable-update.timer')
+            except Exception as e:
+                print_warning(f'Could not disable systemd timer: {e}')
+            # remove unit files
+            try:
+                if service_file.exists():
+                    service_file.unlink()
+                if timer_file.exists():
+                    timer_file.unlink()
+                print_success('Removed unit files')
+            except Exception:
+                pass
+
+        elif cmd == 'status':
+            try:
+                subprocess.run(['systemctl', '--user', 'status', 'winpatable-update.timer'])
+            except Exception as e:
+                print_warning(f'Could not query systemd timer status: {e}')
+        else:
+            print('Usage: winpatable updater [enable-timer|disable-timer|status]')
     
     def run(self):
             description='Winpatable - Windows Compatibility Layer for Linux',
@@ -604,6 +696,19 @@ Examples:
         report_feature.add_argument('--title', help='Short title for the feature request')
         report_feature.add_argument('--description', help='Detailed description of the feature request')
         report_subparsers.add_parser('gui', help='Open a simple GUI to report bugs/features')
+
+        # Auth command: store GitHub token securely
+        auth_parser = subparsers.add_parser('auth', help='Authentication helpers')
+        auth_sub = auth_parser.add_subparsers(dest='auth_command', help='Auth commands')
+        gh = auth_sub.add_parser('github', help='GitHub token storage')
+        gh.add_argument('--set-token', help='Set GitHub token (saves to ~/.winpatable/github_token)', nargs='?', const=True)
+
+        # Updater service (systemd user timer)
+        updater_parser = subparsers.add_parser('updater', help='Updater utilities (system timer)')
+        updater_sub = updater_parser.add_subparsers(dest='updater_command', help='Updater commands')
+        updater_sub.add_parser('enable-timer', help='Register systemd user timer to run winpatable update daily')
+        updater_sub.add_parser('disable-timer', help='Disable the systemd user timer')
+        updater_sub.add_parser('status', help='Show updater timer status (systemctl --user)')
         
         args = parser.parse_args()
         
@@ -624,6 +729,8 @@ Examples:
             'performance-tuning': self.cmd_performance_tuning,
             'update': self.cmd_update,
             'report': self.cmd_report,
+            'auth': self.cmd_auth,
+            'updater': self.cmd_updater,
             'ai': self.cmd_ai,
             'profile': self.cmd_profile,
             'security': self.cmd_security

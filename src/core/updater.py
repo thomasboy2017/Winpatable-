@@ -284,6 +284,22 @@ def auto_update(check_only: bool = False, verbose: bool = False, mode: str = 'au
             is_beta_tag = any(x in tag for x in ['beta', 'rc', 'alpha']) or is_prerelease
 
             # If channel is 'stable' and release is beta/prerelease, treat as non-applicable
+            # If a release manifest url is provided, prefer its mapping
+            manifest_url = cfg.get('release_manifest_url')
+            manifest_channel = None
+            if manifest_url:
+                try:
+                    with urllib.request.urlopen(manifest_url, timeout=5) as resp:
+                        manifest = json.loads(resp.read().decode('utf-8'))
+                        tag_name = checker.latest_release.get('tag_name') if checker.latest_release else None
+                        if tag_name and tag_name in manifest:
+                            manifest_channel = manifest[tag_name].get('channel')
+                except Exception:
+                    manifest_channel = None
+
+            if manifest_channel:
+                channel = manifest_channel
+
             if channel == 'stable' and is_beta_tag:
                 if verbose:
                     print("✓ Skipping prerelease/beta update while on 'stable' channel")
