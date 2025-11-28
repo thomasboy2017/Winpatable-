@@ -165,6 +165,27 @@ Application runs with GPU acceleration
 ├── gpu/                     # GPU settings
 ├── wine/                    # Wine files
 └── config.json             # Configuration
+
+## Updater & Release Management
+
+Winpatable includes a built-in updater client that is lightweight and user-friendly. The updater's behavior is controlled by the JSON configuration stored at `~/.winpatable/updater.json` and supports the following features:
+
+- Scheduled checks: security updates are checked by default weekly and feature updates monthly. These intervals are configurable via `security_interval_days` and `feature_interval_days`.
+- Update freeze policy: non-security (feature) updates can be frozen until a specified date using the `freeze_until` ISO date field; this allows administrators to delay feature rollouts while applying security patches.
+- Release manifest: optionally, a remote JSON manifest mapping release tags to channel metadata (e.g., `stable` or `beta`) can be provided. When configured, Winpatable prefers the manifest mapping for channel decisions during update checks, which enables precise channel control independent of tag heuristics.
+
+    Example manifest:
+
+```json
+{
+    "v1.5.0": { "channel": "stable" },
+    "v1.6.0-beta": { "channel": "beta" }
+}
+```
+
+- Cron fallback: on systems without systemd user timers (or where the user prefers cron), the CLI can register a daily cron job that runs the updater in `--check-only` mode. The command uses the running Python executable and tags the crontab entry with `# winpatable-updater` so it can be easily found or removed.
+
+The updater is designed to be conservative by default (apply security patches promptly while deferring non-critical feature updates) and to be transparent to administrators via the config file and manifest mapping.
 ```
 
 ## GPU Implementation
