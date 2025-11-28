@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Winpatable Setup
+Comment=Interactive Windows Compatibility Setup Wizard
+Exec=python3 /opt/winpatable/scripts/wizard.py
+Icon=preferences-system
+Terminal=true
+Categories=System;
+Keywords=Windows;Wine;Proton;Compatibility;
