@@ -53,3 +53,13 @@ jobs:
         with:
           name: winpatable-flatpak
           path: winpatable.flatpak
+
+      - name: Install GitHub CLI and upload to Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gh
+          # Upload to existing release tag v0.1.0 (clobber if already present)
+          gh release upload v0.1.0 winpatable.flatpak --clobber || \
+            gh release create v0.1.0 winpatable.flatpak --title "v0.1.0" --notes "Automated Flatpak build upload"
