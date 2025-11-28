@@ -18,6 +18,7 @@ from src.core.system_info import SystemDetector, print_system_info
 from src.gpu.gpu_manager import GPUDriverManager
 from src.wine.wine_manager import WineManager
 from src.installers.app_installers import ApplicationManager
+from src.core.updater import auto_update, UpdateChecker
 
 # ANSI Colors
 class Colors:
@@ -278,6 +279,20 @@ class WinpatableUI:
         
         print("\n" + "="*60 + "\n")
     
+    def cmd_update(self, args):
+        """Check for and install updates"""
+        print_color("\n" + "="*60)
+        print_color("WINPATABLE UPDATE CLIENT", Colors.BOLD)
+        print_color("="*60 + "\n")
+        
+        success = auto_update(check_only=args.check_only, verbose=True)
+        
+        if not success:
+            print_error("Update check failed or was cancelled")
+            return
+        
+        print_color("="*60 + "\n", Colors.BOLD)
+    
     def run(self):
         """Main entry point"""
         parser = argparse.ArgumentParser(
@@ -341,6 +356,11 @@ Examples:
         # Performance tuning command
         subparsers.add_parser('performance-tuning', help='Show performance tuning recommendations')
         
+        # Update command
+        update_parser = subparsers.add_parser('update', help='Check for and install updates')
+        update_parser.add_argument('--check-only', action='store_true', help='Only check for updates, do not install')
+        update_parser.add_argument('--force', action='store_true', help='Force update without asking for confirmation')
+        
         args = parser.parse_args()
         
         self.print_banner()
@@ -357,7 +377,8 @@ Examples:
             'install-app': self.cmd_install_app,
             'list-apps': self.cmd_list_apps,
             'quick-start': self.cmd_quick_start,
-            'performance-tuning': self.cmd_performance_tuning
+            'performance-tuning': self.cmd_performance_tuning,
+            'update': self.cmd_update
         }
         
         if args.command in command_map:

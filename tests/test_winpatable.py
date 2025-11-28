@@ -10,6 +10,7 @@ from pathlib import Path
 from src.core.system_info import SystemDetector, SystemInfo
 from src.wine.wine_manager import WineManager
 from src.installers.app_installers import ApplicationManager
+from src.core.updater import UpdateChecker
 
 class TestSystemDetection(unittest.TestCase):
     """Test system detection functionality"""
@@ -212,6 +213,43 @@ class TestCompatibility(unittest.TestCase):
         supported = ['ubuntu', 'linux-mint']
         self.assertIn(os_type.value, supported)
 
+class TestUpdateChecker(unittest.TestCase):
+    """Test update checking functionality"""
+    
+    def setUp(self):
+        self.checker = UpdateChecker(current_version="0.1.0")
+    
+    def test_parse_version(self):
+        """Test semantic version parsing"""
+        # Note: parse_version pads to ensure at least 3 parts, max 4
+        v1 = self.checker.parse_version("0.1.0")
+        v2 = self.checker.parse_version("1.2.3")
+        v3 = self.checker.parse_version("v1.0.0")
+        v4 = self.checker.parse_version("2.5")
+        
+        # Just verify parsing works and tuples can be compared
+        self.assertIsInstance(v1, tuple)
+        self.assertIsInstance(v2, tuple)
+        self.assertGreater(len(v1), 0)
+        self.assertEqual(v1[0], 0)
+        self.assertEqual(v1[1], 1)
+    
+    def test_version_comparison(self):
+        """Test version comparison logic"""
+        current = self.checker.parse_version("0.1.0")
+        newer = self.checker.parse_version("0.2.0")
+        older = self.checker.parse_version("0.0.9")
+        
+        self.assertLess(current, newer)
+        self.assertGreater(current, older)
+    
+    def test_get_install_dir_default(self):
+        """Test getting default installation directory"""
+        install_dir = self.checker.get_install_dir()
+        self.assertTrue(os.path.exists(os.path.dirname(install_dir)) or 
+                       install_dir.startswith(os.path.expanduser("~")))
+
+
 def run_tests():
     """Run all tests"""
     loader = unittest.TestLoader()
@@ -221,6 +259,7 @@ def run_tests():
     suite.addTests(loader.loadTestsFromTestCase(TestWineManager))
     suite.addTests(loader.loadTestsFromTestCase(TestApplicationManager))
     suite.addTests(loader.loadTestsFromTestCase(TestCompatibility))
+    suite.addTests(loader.loadTestsFromTestCase(TestUpdateChecker))
     
     runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(suite)
