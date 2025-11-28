@@ -32,10 +32,12 @@ winpatable quick-start
 - **[Application Guides](./docs/APPLICATION_GUIDES.md)** - How to install specific apps
 - **[GPU Guide](./docs/GPU_GUIDE.md)** - GPU setup and troubleshooting
 - **[Troubleshooting](./TROUBLESHOOTING.md)** - Common issues & solutions
-- **[Architecture](./docs/ARCHITECTURE.md)** - Technical details
 
 ---
+- **[Architecture](./docs/ARCHITECTURE.md)** - Technical details
+- **[Security Guide](./SECURITY.md)** - Security features & hardening (v1.5.0+)
 
+---
 ## 🎯 What Can You Do?
 
 | Application | Support | Speed | GPU | Cost |
@@ -62,8 +64,24 @@ winpatable quick-start
 - **Storage**: 100+ GB on SSD
 - **GPU**: NVIDIA RTX 3060+ or equivalent
 
----
 
+### 🆕 v1.5.0: Expanded Distribution Support
+
+**Debian-Based** (Auto-detected, uses `apt-get`)
+- ✓ Ubuntu 22.04+ (Jammy, Kinetic, Lunar, Mantic)
+- ✓ Linux Mint 21+ (Vanessa, Victoria, Virginia)
+- ✓ Debian 12+ (Bookworm)
+- ✓ Elementary OS 7+
+- ✓ Pop!_OS 22.04+
+
+**Fedora-Based** (Auto-detected, uses `dnf`)
+- ✓ Fedora 38+ (latest)
+- ✓ RHEL 9+ (subscription required)
+- ✓ CentOS Stream 9+
+- ✓ Rocky Linux 9+
+- ✓ Alma Linux 9+
+
+---
 ## 🚀 Installation Methods
 
 ### Method 1: One-Click Install (Easiest)
@@ -117,6 +135,22 @@ winpatable performance-tuning
 
 # View all commands
 winpatable --help
+
+### Security Commands (v1.5.0+)
+
+```bash
+# Run comprehensive security audit
+winpatable security audit
+
+# Scan for malware in a directory
+winpatable security scan ~/.winpatable
+
+# Install antivirus (ClamAV)
+winpatable security install-clamav
+```
+
+For detailed security information, see [SECURITY.md](./SECURITY.md).
+
 ```
 
 ## ❓ FAQ
