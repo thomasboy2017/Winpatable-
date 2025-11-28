@@ -51,16 +51,17 @@ winpatable quick-start
 
 ### Minimum
 - **OS**: Ubuntu 20.04+ or Linux Mint 20+
-- **CPU**: Intel Core i5 or AMD Ryzen 5 (x64)
+- **CPU**: 64 Bit Dual Core Processor with Four or More Threads runing at 2GHz and with AVX instructions
 - **RAM**: 4 GB (8 GB recommended)
 - **Storage**: 30 GB free space
+- ** Graphic Processor** Intel HD 4000, AMD Radeon RX 360+, Nvidia GTX 750+ 
 
 ### Recommended
-- **OS**: Ubuntu 24.04 LTS or Linux Mint 21+
-- **CPU**: Intel Core i7/i9 or AMD Ryzen 7/9
+- **OS**: Ubuntu 24.04 LTS or Linux Mint 21+ (Version 1.4/1.5 support Pop OS, Core, Fedora, Debian, Baszlite )
+- **CPU**: A 64 bit processor with 8 cores, hyperthreading and AVX2 instructions.
 - **RAM**: 16-32 GB
 - **Storage**: 100+ GB on SSD
-- **GPU**: NVIDIA RTX 3060+ or equivalent
+- **GPU**: NVIDIA RTX 3060+ or AMD Radeon RX 6700XT
 
 ---
 
@@ -125,7 +126,7 @@ winpatable --help
 **A:** Usually 90-95% as fast. Professional apps like Premiere run at near-native speeds with GPU acceleration.
 
 ### Q: Do I need a GPU?
-**A:** No, but it helps. Professional apps run much faster with GPU (NVIDIA RTX recommended).
+**A:** No, but it helps. Professional 3D apps run much faster with GPU (NVIDIA RTX recommended).
 
 ### Q: Is it safe?
 **A:** Yes! Applications run in an isolated environment (Wine prefix) and can't access your entire system.
