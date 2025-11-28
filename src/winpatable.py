@@ -7,9 +7,14 @@ Main CLI Interface for managing Windows application compatibility
 import argparse
 import sys
 import os
+import webbrowser
 from pathlib import Path
 from typing import Optional
 import time
+import platform
+import getpass
+import json
+from urllib.parse import quote as urllib_request_quote
 
 # Add src to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
@@ -193,10 +198,15 @@ class WinpatableUI:
         print_info("This will set up Winpatable for you automatically")
         print_info("It will take 10-30 minutes depending on your system")
         
-        response = input(f"\n{Colors.YELLOW}Continue with installation? (yes/no){Colors.END} ").lower()
-        if response not in ['yes', 'y']:
-            print_warning("Installation cancelled")
-            return
+        # If simple mode, run with defaults
+        if getattr(args, 'simple', False):
+            print_info("Running quick-start in simple mode (defaults will be applied)")
+            response = 'yes'
+        else:
+            response = input(f"\n{Colors.YELLOW}Continue with installation? (yes/no){Colors.END} ").lower()
+            if response not in ['yes', 'y']:
+                print_warning("Installation cancelled")
+                return
         
         # Step 1: Detect system
         print_color("\n[1/4] Detecting system information...", Colors.CYAN)
@@ -206,7 +216,10 @@ class WinpatableUI:
         has_gpu = any(gpu.is_supported for gpu in self.system_info.gpus)
         if has_gpu:
             print_color("\n[2/4] Installing GPU drivers...", Colors.CYAN)
-            response = input(f"{Colors.YELLOW}Install GPU drivers? (yes/no){Colors.END} ").lower()
+            if getattr(args, 'simple', False):
+                response = 'yes'
+            else:
+                response = input(f"{Colors.YELLOW}Install GPU drivers? (yes/no){Colors.END} ").lower()
             if response in ['yes', 'y']:
                 self.cmd_install_gpu_drivers(None)
             else:
@@ -287,8 +300,7 @@ class WinpatableUI:
         print_color("\n" + "="*60)
         print_color("WINPATABLE UPDATE CLIENT", Colors.BOLD)
         print_color("="*60 + "\n")
-        
-        success = auto_update(check_only=args.check_only, verbose=True)
+        success = auto_update(check_only=args.check_only, verbose=True, mode=getattr(args, 'mode', 'auto'), force=getattr(args, 'force', False))
         
         if not success:
             print_error("Update check failed or was cancelled")
@@ -546,6 +558,7 @@ Examples:
         quick_parser = subparsers.add_parser('quick-start', 
                                             help='Quick setup for all components')
         quick_parser.add_argument('--prefix', help='Wine prefix directory (default: ~/.winpatable)')
+        quick_parser.add_argument('--simple', action='store_true', help='Run quick-start with sensible defaults for everyday users')
         
         # Performance tuning command
         subparsers.add_parser('performance-tuning', help='Show performance tuning recommendations')
@@ -554,6 +567,7 @@ Examples:
         update_parser = subparsers.add_parser('update', help='Check for and install updates')
         update_parser.add_argument('--check-only', action='store_true', help='Only check for updates, do not install')
         update_parser.add_argument('--force', action='store_true', help='Force update without asking for confirmation')
+        update_parser.add_argument('--mode', choices=['auto', 'security', 'feature'], default='auto', help='Which update channel to check: weekly security or monthly feature (default: auto)')
         
         # AI Assistant command
         ai_parser = subparsers.add_parser('ai', help='AI assistant for app compatibility')
@@ -579,6 +593,16 @@ Examples:
         security_scan.add_argument('path', nargs='?', default=str(Path.home() / '.winpatable'),
                                  help='Path to scan (default: ~/.winpatable)')
         security_subparsers.add_parser('install-clamav', help='Install ClamAV antivirus')
+
+        # Report command (bug / feature)
+        report_parser = subparsers.add_parser('report', help='Create a bug or feature report')
+        report_subparsers = report_parser.add_subparsers(dest='report_command', help='Report commands')
+        report_bug = report_subparsers.add_parser('bug', help='Report a bug')
+        report_bug.add_argument('--title', help='Short title for the bug')
+        report_bug.add_argument('--description', help='Detailed description / steps to reproduce')
+        report_feature = report_subparsers.add_parser('feature', help='Request a feature')
+        report_feature.add_argument('--title', help='Short title for the feature request')
+        report_feature.add_argument('--description', help='Detailed description of the feature request')
         
         args = parser.parse_args()
         
@@ -598,6 +622,7 @@ Examples:
             'quick-start': self.cmd_quick_start,
             'performance-tuning': self.cmd_performance_tuning,
             'update': self.cmd_update,
+            'report': self.cmd_report,
             'ai': self.cmd_ai,
             'profile': self.cmd_profile,
             'security': self.cmd_security
@@ -608,6 +633,78 @@ Examples:
         else:
             print(f"Unknown command: {args.command}")
             parser.print_help()
+
+    def cmd_report(self, args):
+        """Create a bug or feature report saved locally and optionally open GitHub issue URL"""
+        rpt_type = getattr(args, 'report_command', None)
+        if not rpt_type:
+            print("Usage: winpatable report [bug|feature] --title 'Short title' --description 'Details'")
+            return
+
+        title = getattr(args, 'title', None)
+        description = getattr(args, 'description', None)
+
+        # Interactive prompts if missing
+        if not title and sys.stdin.isatty():
+            title = input("Enter a short title for the report: ").strip()
+        if not description and sys.stdin.isatty():
+            print("Enter a detailed description (end with an empty line):")
+            lines = []
+            while True:
+                try:
+                    line = input()
+                except EOFError:
+                    break
+                if not line.strip():
+                    break
+                lines.append(line)
+            description = '\n'.join(lines).strip()
+
+        if not title:
+            print_error("Report title is required")
+            return
+
+        report_dir = Path.home() / '.winpatable' / 'reports'
+        report_dir.mkdir(parents=True, exist_ok=True)
+
+        timestamp = int(time.time())
+        filename = f"{rpt_type}_{timestamp}.json"
+        path = report_dir / filename
+
+        system_summary = {
+            'user': getpass.getuser(),
+            'platform': platform.platform(),
+            'python': platform.python_version()
+        }
+
+        report = {
+            'type': rpt_type,
+            'title': title,
+            'description': description or '',
+            'system': system_summary,
+            'created_at': timestamp
+        }
+
+        try:
+            with open(path, 'w') as fh:
+                json.dump(report, fh, indent=2)
+            print_success(f"Report saved: {path}")
+        except Exception as e:
+            print_error(f"Failed to save report: {e}")
+            return
+
+        # Offer to open GitHub new issue page with prefilled title/body
+        if sys.stdin.isatty():
+            go = input("Open GitHub new issue page to submit this report? (y/n): ").strip().lower()
+            if go == 'y':
+                repo = 'thomasboy2017/Winpatable-'
+                url = f"https://github.com/{repo}/issues/new?title={urllib_request_quote(title)}&body={urllib_request_quote(description or '')}"
+                try:
+                    webbrowser.open(url)
+                    print_info("Opened browser to GitHub issue page")
+                except Exception:
+                    print_warning("Could not open web browser. You can manually create an issue at: https://github.com/thomasboy2017/Winpatable-/issues/new")
+
 
 def main():
     """Main entry point"""

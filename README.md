@@ -151,6 +151,40 @@ winpatable security install-clamav
 
 For detailed security information, see [SECURITY.md](./SECURITY.md).
 
+### Automatic Updater (defaults)
+
+Winpatable includes a scheduled updater that checks for important updates automatically:
+
+- **Security updates**: checked weekly (every 7 days) and applied when a release is marked as a security/patch release
+- **Feature updates**: checked monthly (every 30 days) and applied for standard feature releases
+
+Configuration is stored in `~/.winpatable/updater.json` and you can adjust intervals by editing `security_interval_days` and `feature_interval_days`.
+
+CLI usage:
+```bash
+# Manual check (auto-detects schedule)
+winpatable update
+
+# Force a security-only check/install
+winpatable update --mode security --force
+
+# Force a feature-only check/install
+winpatable update --mode feature --force
+```
+
+### Reporting Bugs & Requesting Features
+
+You can create a local bug or feature report with the CLI. Reports are saved to `~/.winpatable/reports/` and you can optionally open the GitHub issue page with the report prefilled.
+
+CLI usage:
+```bash
+# Report a bug (interactive)
+winpatable report bug
+
+# Report a feature (non-interactive)
+winpatable report feature --title "Add dark mode" --description "Please add a dark mode to the UI"
+```
+
 ```
 
 ## ❓ FAQ
