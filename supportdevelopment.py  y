@@ -1,0 +1,89 @@
+import webbrowser
+import sys
+
+# --- Affiliate Links ---
+# (List of products and their corresponding Amazon affiliate URLs)
+AFFILIATE_LINKS = [
+    ("Kindle Colorsoft (10% Off w/ GETKINDLE10)", "https://amzn.to/4o6CD5N"),
+    ("Kindle Paperwhite EBook Tablet", "https://amzn.to/4hPsw43"),
+    ("TP-Link Dual Band WIFI Router ($79)", "https://amzn.to/3LRzp8M"),
+    ("Rocketbook Core Reusable Spiral Notebook", "https://amzn.to/3LsyfRe"),
+    ("Baseus 2PK 65W USBC/A wall charger", "https://amzn.to/4nPwlrk"),
+    ("TOZO A1 Wireless Earbuds ($14)", "https://amzn.to/43npTAl"),
+    ("MOOKA HEPA Air Purifier", "https://amzn.to/45rrG7w"),
+    ("Baseus 7 in 1 USB C Hub", "https://amzn.to/3HqdmEs"),
+    ("4 in 1 Wireless Lavalier Microphone", "https://amzn.to/3LXs5c5"),
+    ("65% Gaming Keyboard and Mouse Combo", "https://amzn.to/3Mp0Gjd"),
+    ("ArcticPro 24 inch Monitor (120Hz)", "https://amzn.to/4psqhGd"),
+    ("HUION Inspiroy H640P Drawing Tablet", "https://amzn.to/4pqbyMa"),
+    ("Amazon Basics Micro SDXC Memory Card (128 GB)", "https://amzn.to/3XOVozY"),
+    ("Sony ZX Series Wired On-Ear Headphones", "https://amzn.to/3M2bX95"),
+]
+
+def display_menu():
+    """Displays the link menu options to the user."""
+    print("\n" + "=" * 50)
+    print("      🎁 Support Your Boy & Save Money! 🎁")
+    print("=" * 50)
+    print("1. View all 14 recommended products (opens 14 tabs)")
+    print("2. View a specific product link")
+    print("3. Exit")
+    print("-" * 50)
+
+def open_all_links():
+    """Prompts and opens all links in new browser tabs."""
+    if not AFFILIATE_LINKS:
+        print("No links available.")
+        return
+
+    print(f"\n⚠️ WARNING: This will open {len(AFFILIATE_LINKS)} tabs in your default web browser.")
+    confirmation = input("Proceed? (y/N): ").strip().lower()
+
+    if confirmation == 'y':
+        print("\nOpening links now...")
+        for name, url in AFFILIATE_LINKS:
+            # open_new_tab is used for cross-platform reliability
+            webbrowser.open_new_tab(url)
+            print(f"  > Opened: {name}")
+        print("\n✅ All support links opened. Thank you for your support!")
+    else:
+        print("Operation cancelled.")
+
+def open_specific_link():
+    """Allows the user to select and open a single link."""
+    print("\n--- Select a Product to View ---")
+    for i, (name, _) in enumerate(AFFILIATE_LINKS, 1):
+        print(f"{i}. {name}")
+    print("--------------------------------")
+    
+    try:
+        choice = int(input("Enter number (1-14) or 0 to cancel: "))
+        if 1 <= choice <= len(AFFILIATE_LINKS):
+            name, url = AFFILIATE_LINKS[choice - 1]
+            print(f"\nOpening {name}...")
+            webbrowser.open_new_tab(url)
+        elif choice == 0:
+            print("Selection cancelled.")
+        else:
+            print("Invalid number. Please try again.")
+    except ValueError:
+        print("Invalid input. Please enter a number.")
+
+def main():
+    while True:
+        display_menu()
+        choice = input("Enter your choice (1-3): ").strip()
+        
+        if choice == '1':
+            open_all_links()
+        elif choice == '2':
+            open_specific_link()
+        elif choice == '3':
+            print("Exiting support menu. Thank you!")
+            break
+        else:
+            print("Invalid choice. Please enter 1, 2, or 3.")
+
+if __name__ == "__main__":
+    main()
+
