@@ -4,6 +4,7 @@
 
 Your request to "add more professional software (audio, cad, programming) to the compatibility" has been successfully completed. Winpatable now supports **14 professional applications** across multiple categories.
 
+*Compatibily is with the current versions of said software, updates might break compatibility*
 ---
 
 ## What Was Added
@@ -17,6 +18,7 @@ Your request to "add more professional software (audio, cad, programming) to the
 1. **Autodesk AutoCAD** - Professional 2D/3D design
 2. **SolidWorks** - Complete 3D CAD/CAM platform
 3. **Autodesk Fusion 360** - Cloud-based CAD/CAM
+**Autodesk Revit- Buliding Infomation Modeling Software
 
 ### Programming & Game Development (4 new apps)
 1. **Microsoft Visual Studio** - C#/C++/Python IDE
@@ -28,7 +30,7 @@ Your request to "add more professional software (audio, cad, programming) to the
 - Adobe Premiere Pro
 - Sony Vegas Pro
 - Autodesk 3DS Max
-- Microsoft Office
+- Microsoft Office (Word, Powerpoint, Teams, Excel, Acess, Publisher)
 
 ---
 
@@ -197,22 +199,22 @@ winpatable install-app jetbrains --installer ./pycharm-setup.exe
 ## System Requirements
 
 ### Minimum (4GB RAM)
-- CPU: Intel Core i5 / AMD Ryzen 5
-- RAM: 4 GB
-- Storage: 30 GB SSD
-- GPU: Integrated (some apps)
+- CPU: Intel or AMD CPU with 4 or more threads running at 2GHz 
+- RAM: 4 GB (though with limited compatibility and slow performance)
+- Storage: 30 GB SSD (if your pc has a slow spining HDD, a 240GB one costs ~$25)
+- GPU: Integrated Intel UHD, Vega 3 or Nvidia GT 730 (some apps) 
 
 ### Recommended (16GB RAM)
-- CPU: Intel Core i7 / AMD Ryzen 7
-- RAM: 16 GB
+- CPU: Intel or AMD CPU with 6 cores and 12 threads runing at 3.6GHz
+- RAM: 16 for Productivity, Lightweight Cad and Gaming Software
 - Storage: 60 GB SSD
-- GPU: NVIDIA RTX / AMD Radeon Pro
+- GPU: NVIDIA RTX 3060/ AMD Radeon RX 6700
 
 ### Workstation (32GB+ RAM)
-- CPU: Intel Xeon / AMD Threadripper
-- RAM: 32+ GB
+- CPU: Intel or AMD CPU with eight or more cores runing at 3.6GHz supporting AVX2 instructions
+- RAM: 32+ GB (64 for Machine Learning and 8K rendering)
 - Storage: 100+ GB NVMe SSD
-- GPU: Professional GPU (6GB+ VRAM)
+- GPU: Professional GPU (12GB+ VRAM)
 
 ---
 
