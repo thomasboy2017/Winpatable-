@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env python3
+
 # Winpatable One-Click Installation Script
 # Just run: curl -sSL https://raw.githubusercontent.com/thomasboy2017/Winpatable-/main/install.sh | bash
 
@@ -133,31 +134,21 @@ setup_python_env() {
     print_success "Python dependencies installed"
 }
 
-# Create installation
-setup_installation() {
-    print_header "Setting Up Installation"
-    
-    REPO_DIR="$1"
-    INSTALL_DIR="${2:-/opt/winpatable}"
-    
-    print_info "Creating installation directory..."
-    sudo mkdir -p "$INSTALL_DIR"
-    print_success "Installation directory created"
-    
-    print_info "Copying files..."
-    sudo cp -r "$REPO_DIR"/* "$INSTALL_DIR/"
-    sudo chown -R $(whoami) "$INSTALL_DIR"
-    sudo chmod +x "$INSTALL_DIR/src/winpatable.py"
-    sudo chmod +x "$INSTALL_DIR/scripts/install.sh"
-    sudo chmod +x "$INSTALL_DIR/scripts/launcher.py"
-    print_success "Files installed"
-    
-    # Create symlink
-    print_info "Creating command symlink..."
-    sudo ln -sf "$INSTALL_DIR/src/winpatable.py" /usr/local/bin/winpatable
-    sudo chmod +x /usr/local/bin/winpatable
-    print_success "Command 'winpatable' created"
-    
+# Create Launcher Script
+print_info "creating launcher script..."
+Launcher="$INSTALL_DIR.scripts"
+sudo mkdir -p "$INSTALL`_DIR/scripts"
+CAT << 'EOF' | sudo tee "$Launcher/winpatable" > /dev/null
+#!/bin/bash
+    python3 /opt/winpatable/scripts/winpatable.py "$@"
+EOF
+sudo chmod +x "$Launcher/winpatable"
+print_success "Launcher script created at $Launcher/winpatable"
+
+#Create symlink to launcher
+print_info "Creating symlink to /usr/local/bin..."
+sudo ln -sf "$Launcher/winpatable" /usr/local/bin/winpatable
+print_success "Symlink created at /usr/local/bin/winpatable" and "command 'winpatable' created"
     # Create user directory
     print_info "Creating user configuration directory..."
     mkdir -p ~/.winpatable/applications

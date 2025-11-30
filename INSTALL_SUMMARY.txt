@@ -64,9 +64,9 @@ WHAT'S INCLUDED:
 
 Supported Applications:
   ✓ Microsoft Office
-  ✓ Adobe Premiere Pro
+  ✓ Adobe Premiere Pro, Photoshop and Illustrator
   ✓ Sony Vegas Pro
-  ✓ Autodesk 3DS Max
+  ✓ Autodesk 3DS Max, and Revit (version 1.5)
 
 GPU Support:
   ✓ NVIDIA (GeForce, RTX, Tesla)
@@ -80,9 +80,9 @@ FEATURES FOR AVERAGE USERS:
 ✨ One-Click Installation - Just copy and paste!
 ✨ Automatic System Detection - Detects your hardware
 ✨ Interactive Setup Wizard - Step-by-step guidance
-✨ Simple Commands - Easy to use
+✨ Simple Commands - (Mostly Easy to use
 ✨ Colorful Output - Easy to read
-✨ Complete Documentation - Written for non-technical users
+✨ Complete Documentation - Written for non-technical users (though if you are using linux you probaly have some knowledge)
 ✨ Automatic GPU Setup - Right drivers for your GPU
 ✨ Application Profiles - Pre-configured for each app
 
