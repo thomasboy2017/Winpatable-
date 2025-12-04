@@ -53,6 +53,8 @@ winpatable setup-wine
 # 4. Install app
 winpatable install-app <cmd> --installer /path/to/setup.exe
 
+list software to install and make easy to use 
+
 # 5. Optimize
 winpatable performance-tuning
 ```

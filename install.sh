@@ -191,6 +191,8 @@ EOF
     read -p "Install to [/opt/winpatable]: " INSTALL_DIR
     INSTALL_DIR="${INSTALL_DIR:-/opt/winpatable}"
     print_info "Installation directory: $INSTALL_DIR"
+
+    y or no    read -p "Proceed with installation? (y/n) " -n 1 -r
     
     # Install dependencies
     install_dependencies
@@ -204,6 +206,18 @@ EOF
     # Setup installation
     setup_installation "$REPO_DIR" "$INSTALL_DIR"
     
+    Install software
+
+    print_header "Installing Recommended Software"
+    print_info "Installing Wine...
+    sudo dpkg --add-architecture i386
+    wget -qO - https://dl.winehq.org/wine-builds/winehq.key | sudo apt-key add -
+    sudo add-apt-repository 'deb https://dl.winehq.org/wine-build
+    s/ubuntu/ focal main' -y
+    sudo apt update
+    sudo apt install --install-recommends -y winehq-stable
+        print_success "Wine installed
+        "
     # Print summary
     print_header "Installation Complete!"
     echo -e "${GREEN}Winpatable is now installed!${NC}\n"
