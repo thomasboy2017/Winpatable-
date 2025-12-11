@@ -1,6 +1,10 @@
 # Winpatable - Windows Compatibility Layer for Linux
 
-**Run Windows applications on Linux Mint and Ubuntu with full GPU support**
+**Run Windows applications on Debian and Ubuntu based Linux Distros with full GPU support**
+
+*Note this is a work in progress, experimenting with phython, shell and c with the use of AI (to speed things up), some functions may not work the way you or I want it to, as such some tinkering, and troubleshooting is required for installation and proper use of this program.
+
+If you have knowledge in the Shell and Phython coding lanauge, I highly suggest you comment what type of tricks I can use to improve the effectiveness of my code. 
 
 ![Supported Platforms](https://img.shields.io/badge/Ubuntu-20.04%2B-orange) ![Supported Platforms](https://img.shields.io/badge/Linux%20Mint-20%2B-green) ![License](https://img.shields.io/badge/License-MIT-blue)
 
