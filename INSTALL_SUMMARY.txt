@@ -34,6 +34,7 @@ For Command-Line Users:
   2. Run: winpatable quick-start
   3. Install apps: winpatable install-app office --installer ~/path/to/file.exe
 
+When Downloading Windows Applications you will need to use a User Agent Switching extention in Chromium or Firefox to trick the software to thinking your on Windows 
 ═══════════════════════════════════════════════════════════════════════════
 
 KEY DOCUMENTATION FILES:
@@ -69,8 +70,8 @@ Supported Applications:
   ✓ Autodesk 3DS Max
 
 GPU Support:
-  ✓ NVIDIA (GeForce, RTX, Tesla)
-  ✓ AMD (Radeon RX, RDNA)
+  ✓ NVIDIA (Maxwell, Pascal, Turing, Ampere, Ada Lovelace, Blackwell)
+  ✓ AMD (Radeon GCN, RDNA, RDNA 2, RDNA 3, RDNA 4)
   ✓ Intel (UHD, Iris Xe, Arc)
 
 ═══════════════════════════════════════════════════════════════════════════
