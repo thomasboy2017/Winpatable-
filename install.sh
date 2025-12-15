@@ -1,6 +1,6 @@
 #!/bin/bash
 # Universal Winpatable Installer
-# Usage: curl -sSL https://raw.githubusercontent.com/thomasboy2017/Winpatable-/version.1.1/install.sh | bash
+# Usage: curl -sSL https://raw.githubusercontent.com/thomasboy2017/Winpatable-/main/install.sh | bash
 
 set -e
 
@@ -98,3 +98,4 @@ setup_gpu
 install_winpatable
 gpu_test
 echo -e "${GREEN}✓ Installation complete! Run 'winpatable --help' to get started.${NC}"
+
