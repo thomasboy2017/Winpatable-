@@ -1,6 +1,6 @@
 #!/bin/bash
 # Universal Winpatable Installer
-# Usage: curl -sSL https://raw.githubusercontent.com/thomasboy2017/Winpatable-/main/install.sh | bash
+# Usage: curl -sSL https://raw.githubusercontent.com/thomasboy2017/Winpatable-/version.1.1/install.sh | bash
 
 set -e
 
