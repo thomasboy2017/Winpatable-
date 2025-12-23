@@ -1,0 +1,142 @@
+app-id: org.winpatable.Winpatable
+runtime: org.freedesktop.Platform
+runtime-version: '23.08'
+sdk: org.freedesktop.Sdk
+
+command: winpatable
+
+finish-args:
+  # Display
+  - --share=display
+  - --socket=x11
+  - --socket=wayland
+  
+  # Audio
+  - --socket=pulseaudio
+  - --socket=pipewire
+  
+  # Network (for package downloads and updates)
+  - --share=network
+  
+  # GPU access
+  - --device=dri
+  
+  # Home directory for Wine prefixes
+  - --filesystem=home
+  - --filesystem=/tmp
+  
+  # System bus for hardware detection
+  - --socket=session-bus
+
+modules:
+  # Winpatable main application
+  - name: winpatable
+    buildsystem: simple
+    build-commands:
+      # Create launcher script
+      - |
+        mkdir -p /app/bin
+        cat > /app/bin/winpatable << 'SCRIPT'
+        #!/bin/bash
+        export PYTHONPATH="/app/lib:${PYTHONPATH}"
+        export PATH="/app/bin:${PATH}"
+        
+        # Source environment for Wine and tools
+        if [ -f /app/env.sh ]; then
+          source /app/env.sh
+        fi
+        
+        exec python3 /app/lib/winpatable.py "$@"
+        SCRIPT
+        chmod +x /app/bin/winpatable
+      
+      # Copy Python modules
+      - mkdir -p /app/lib/{core,gpu,installers,wine}
+      - cp src/winpatable.py /app/lib/
+      - cp src/core/*.py /app/lib/core/
+      - cp src/gpu/*.py /app/lib/gpu/
+      - cp src/installers/*.py /app/lib/installers/
+      - cp src/wine/*.py /app/lib/wine/
+      - touch /app/lib/__init__.py
+      - touch /app/lib/core/__init__.py
+      - touch /app/lib/gpu/__init__.py
+      - touch /app/lib/installers/__init__.py
+      - touch /app/lib/wine/__init__.py
+      
+      # Copy configuration
+      - mkdir -p /app/etc/winpatable
+      - cp config/config.json /app/etc/winpatable/
+      
+      # Copy documentation
+      - mkdir -p /app/share/doc/winpatable
+      - cp README.md FEATURES.md /app/share/doc/winpatable/ || true
+      - cp FLATPAK_GUIDE.md /app/share/doc/winpatable/ || true
+      
+      # Desktop integration
+      - mkdir -p /app/share/applications
+      - |
+        cat > /app/share/applications/org.winpatable.Winpatable.desktop << 'DESKTOP'
+        [Desktop Entry]
+        Type=Application
+        Name=Winpatable
+        Comment=Windows Compatibility Layer for Linux
+        Icon=application-x-ms-dos-executable
+        Exec=winpatable %U
+        Terminal=true
+        Categories=Utility;System;Emulator;
+        Keywords=windows;wine;proton;gaming;compatibility;
+        DESKTOP
+      
+      # Create basic icon
+      - mkdir -p /app/share/icons/hicolor/scalable/apps
+      - |
+        cat > /app/share/icons/hicolor/scalable/apps/org.winpatable.Winpatable.svg << 'ICON'
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+          <rect width="256" height="256" fill="#0078d4"/>
+          <text x="128" y="140" font-size="80" font-weight="bold" text-anchor="middle" fill="white" font-family="Arial">W</text>
+        </svg>
+        ICON
+      
+      # Post-install notes
+      - |
+        mkdir -p /app/share/doc/winpatable
+        cat > /app/share/doc/winpatable/FLATPAK_SETUP.txt << 'NOTES'
+        Winpatable Flatpak Setup
+        ========================
+        
+        First Run Setup:
+        1. Run: flatpak run org.winpatable.Winpatable --wizard
+        2. Follow the installation wizard
+        3. Detect GPU and install drivers
+        4. Install Wine/Proton
+        5. Configure your first application
+        
+        System Requirements:
+        - Wine or Proton (install on host: sudo apt install wine)
+        - 16GB+ RAM recommended
+        - NVIDIA/AMD/Intel GPU with updated drivers
+        
+        GPU Installation:
+        
+        Ubuntu/Linux Mint - NVIDIA:
+          sudo apt install nvidia-driver-545
+        
+        Ubuntu/Linux Mint - AMD:
+          sudo apt install amdgpu-dkms
+        
+        Ubuntu/Linux Mint - Intel:
+          sudo apt install intel-gpu-tools
+        
+        For help, visit: https://github.com/thomasboy2017/Winpatable-
+        NOTES
+    
+    sources:
+      - type: dir
+        path: .
+
+# Metadata for app stores
+metadata:
+  name: Winpatable
+  summary: Windows compatibility layer for Linux with GPU support
+
+
